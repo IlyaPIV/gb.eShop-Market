@@ -1,1 +1,4 @@
-
+server:
+  port: 9090
+  servlet:
+    context-path: /eshop

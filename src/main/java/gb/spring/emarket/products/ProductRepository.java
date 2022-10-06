@@ -9,4 +9,6 @@ public interface ProductRepository {
     public Product findById(Integer id) throws ProductNotFoundException;
 
     public Product save(Product product);
+
+    public void delete(Product product);
 }

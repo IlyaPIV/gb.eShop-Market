@@ -1,5 +1,8 @@
-package gb.spring.emarket.products;
+package gb.spring.emarket.products.controllers;
 
+import gb.spring.emarket.products.Product;
+import gb.spring.emarket.products.ProductNotFoundException;
+import gb.spring.emarket.products.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,25 +14,27 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 @Controller
-@RequestMapping("/products")
+@RequestMapping("/products/tl")
 public class ProductController {
 
     @Autowired
     private ProductService service;
 
-    @GetMapping("")
+    @GetMapping("/")
     public String showProductList(Model model){
         model.addAttribute("productList", service.findAll());
 
-        return "products/products";
+        return "products/admin/products";
     }
 
     @GetMapping("/new")
     public String addProduct(Model model){
+        System.out.println("incoming NEW Product request");
+
         model.addAttribute("product", new Product());
         model.addAttribute("pageTitle", "Add new product");
 
-        return "products/product_form";
+        return "products/admin/product_form";
     }
 
     @GetMapping("/edit/{id}")
@@ -39,7 +44,7 @@ public class ProductController {
             model.addAttribute("product", product);
             model.addAttribute("pageTitle", "Edit product (ID: " + id + ")");
 
-            return "products/product_form";
+            return "products/admin/product_form";
         } catch (ProductNotFoundException ex) {
 
 

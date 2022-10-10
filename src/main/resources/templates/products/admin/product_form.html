@@ -3,10 +3,11 @@
 <head th:replace="fragments :: page_head('Product form')"></head>
 <body>
     <div class="container-fluid p-2">
+        <div th:replace="navigation :: header_menu"></div>
     <div>
         <h2> Manage Products | [[${pageTitle}]]</h2>
     </div>
-    <form th:action="@{/products/save}" method="post"
+    <form th:action="@{/products/tl/save}" method="post"
             th:object="${product}">
         <div class="border border-secondary rounded p-3">
 
@@ -33,7 +34,7 @@
             &nbsp;
             <div class="text-center">
                 <input type="submit" value="Save" class="btn btn-primary m-3">
-                <a th:href="@{/products}" class="btn-secondary btn">Cancel</a>
+                <a th:href="@{/products/tl/}" class="btn-secondary btn">Cancel</a>
             </div>
         </div>
     </form>

@@ -36,10 +36,22 @@ public class ProductService {
 
     public void refreshList(){
         if (repository instanceof ProductLocalRepository) {
-            ((ProductLocalRepository) repository).refresh();
+          //  ((ProductLocalRepository) repository).refresh();
             System.out.println(">>> refresh local repository data");
         }
 
     }
 
+    public void delete(Integer id) throws ProductNotFoundException{
+
+            Product product = repository.findById(id);
+            repository.delete(product);
+
+    }
+
+    public Product addNew(String name, Integer cost) {
+        if (repository instanceof ProductLocalRepository) {
+            return (((ProductLocalRepository) repository).addNew(name, cost));
+        } else return null;
+    }
 }

@@ -35,7 +35,6 @@ public class ProductLocalRepository implements ProductRepository {
     }
 
     public void refresh(){
-
         priceList.clear();
         CURRENT_NEW_ID.set(0);
         initProductList(10);
@@ -55,5 +54,18 @@ public class ProductLocalRepository implements ProductRepository {
         CURRENT_NEW_ID.getAndIncrement();
 
         return product;
+    }
+
+    @Override
+    public void delete(Product product) {
+        priceList.remove(product.getId());
+    }
+
+    public Product addNew(String name, Integer cost){
+        Product newProd = new Product(CURRENT_NEW_ID.get(), name, cost);
+        priceList.put(CURRENT_NEW_ID.get(), newProd);
+        CURRENT_NEW_ID.getAndIncrement();
+
+        return newProd;
     }
 }

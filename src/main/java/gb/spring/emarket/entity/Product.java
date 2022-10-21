@@ -1,5 +1,6 @@
 package gb.spring.emarket.entity;
 
+import gb.spring.emarket.dto.ProductDTO;
 import lombok.*;
 
 import javax.persistence.*;
@@ -25,5 +26,11 @@ public class Product{
     public Product(String title, float cost) {
         this.title = title;
         this.cost = cost;
+    }
+
+    public Product(ProductDTO productDTO){
+        this.id = productDTO.getId();
+        this.cost = productDTO.getCost();
+        this.title = productDTO.getTitle();
     }
 }

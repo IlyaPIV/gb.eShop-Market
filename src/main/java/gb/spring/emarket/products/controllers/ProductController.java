@@ -1,6 +1,6 @@
 package gb.spring.emarket.products.controllers;
 
-import gb.spring.emarket.products.Product;
+import gb.spring.emarket.entity.Product;
 import gb.spring.emarket.products.ProductNotFoundException;
 import gb.spring.emarket.products.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +38,7 @@ public class ProductController {
     }
 
     @GetMapping("/edit/{id}")
-    public String editProduct(@PathVariable(name = "id") Integer id, Model model, RedirectAttributes redirectAttributes){
+    public String editProduct(@PathVariable(name = "id") Long id, Model model, RedirectAttributes redirectAttributes){
         try {
             Product product = service.findById(id);
             model.addAttribute("product", product);

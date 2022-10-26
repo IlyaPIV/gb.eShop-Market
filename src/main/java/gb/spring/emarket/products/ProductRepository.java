@@ -1,14 +1,16 @@
 package gb.spring.emarket.products;
 
+import gb.spring.emarket.entity.Product;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.PagingAndSortingRepository;
+
 import java.util.List;
 
-public interface ProductRepository {
+public interface ProductRepository extends PagingAndSortingRepository<Product, Long> {
 
-    public List<Product> findAll();
+    @Query("SELECT p FROM Product p WHERE p.cost > ?1 AND p.cost < ?2")
+    public List<Product> findAllBetweenMinMaxPrice(float minPrice, float maxPrice);
 
-    public Product findById(Integer id) throws ProductNotFoundException;
-
-    public Product save(Product product);
-
-    public void delete(Product product);
+    @Query("SELECT p FROM Product p WHERE p.cost > ?1")
+    public List<Product> findAllWithPriceHigherThan(Float min);
 }

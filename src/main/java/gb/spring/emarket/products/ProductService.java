@@ -1,12 +1,17 @@
 package gb.spring.emarket.products;
 
+import gb.spring.emarket.dto.ProductDTO;
 import gb.spring.emarket.entity.Product;
+import gb.spring.emarket.errors.ProductNotFoundException;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Service
 @Data
@@ -15,43 +20,47 @@ public class ProductService {
     @Autowired
     private ProductRepository repository;
 
+    private final int PRODUCTS_PER_PAGE = 8;
 
-    public List<Product> findAll(){
+
+    public List<Product> findAll() {
         return (List<Product>) repository.findAll();
     }
 
-    public Product findById(Long id) throws ProductNotFoundException{
-        try {
-            return repository.findById(id).get();
-        } catch (NoSuchElementException ex) {
-            throw new ProductNotFoundException("Couldn't find product with id = " + id);
+    public ProductDTO findById(Long id) throws NoSuchElementException {
+        return new ProductDTO(repository.findById(id).orElseThrow());
+    }
+
+    public Page<ProductDTO> getPage(int pageNum) {
+        if (pageNum < 1) pageNum = 1;
+
+        Page<Product> products = repository.findAll(PageRequest.of(pageNum - 1, PRODUCTS_PER_PAGE));
+        return products.map(ProductDTO::new);
+    }
+
+    public ProductDTO save(ProductDTO productDTO) throws NoSuchElementException {
+        Product product = null;
+        Long prodId = productDTO.getId();
+        if (prodId != null) {
+            product = repository.findById(prodId)
+                    .orElseThrow();
+            product.setTitle(productDTO.getTitle());
+            product.setCost(productDTO.getCost());
+        } else {
+            product = repository.save(new Product(productDTO));
         }
+
+        return new ProductDTO(product);
     }
 
-    public Product save(Product product) {
 
-//        return repository.save(product);
-        return null;
+    public void delete(Long id) throws NoSuchElementException {
+        Product product = repository.findById(id).orElseThrow();
+        repository.delete(product);
     }
 
-    public void refreshList(){
-//        if (repository instanceof ProductLocalRepository) {
-//          //  ((ProductLocalRepository) repository).refresh();
-//            System.out.println(">>> refresh local repository data");
-//        }
-    }
-
-    public void delete(Long id) throws ProductNotFoundException{
-        try {
-            Product product = repository.findById(id).get();
-            repository.delete(product);
-        } catch (NoSuchElementException ex) {
-            throw new ProductNotFoundException("Couldn't find product with id = " + id);
-        }
-    }
-
-    public Product addNew(Product incomingProduct) {
-       return repository.save(incomingProduct);
+    public ProductDTO addNew(ProductDTO incomingProduct) {
+        return new ProductDTO(repository.save(new Product(incomingProduct)));
     }
 
     public List<Product> findAllWithFilter(Float min, Float max) {

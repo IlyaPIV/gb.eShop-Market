@@ -38,7 +38,7 @@ public class ProductService {
         return products.map(ProductDTO::new);
     }
 
-    public ProductDTO save(ProductDTO productDTO) throws NoSuchElementException {
+    public ProductDTO save(ProductDTO productDTO) throws NoSuchElementException, NullPointerException {
         Product product = null;
         Long prodId = productDTO.getId();
         if (prodId != null) {
@@ -47,7 +47,7 @@ public class ProductService {
             product.setTitle(productDTO.getTitle());
             product.setCost(productDTO.getCost());
         } else {
-            product = repository.save(new Product(productDTO));
+            throw new NullPointerException("This operation is not supported: product ID = null");
         }
 
         return new ProductDTO(product);

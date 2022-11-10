@@ -2,6 +2,8 @@ package gb.spring.emarket.products;
 
 import gb.spring.emarket.entity.Product;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
@@ -15,5 +17,5 @@ public interface ProductRepository extends PagingAndSortingRepository<Product, L
     @Query("SELECT p FROM Product p WHERE p.cost > ?1")
     public List<Product> findAllWithPriceHigherThan(Float min);
 
-
+    Page<Product> findAll(Specification<Product> productSpecification, Pageable pageable);
 }

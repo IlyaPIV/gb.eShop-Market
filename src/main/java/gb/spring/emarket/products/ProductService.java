@@ -5,6 +5,7 @@ import gb.spring.emarket.entity.Product;
 import gb.spring.emarket.mappers.ProductMapper;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +18,7 @@ import java.util.NoSuchElementException;
 @Service
 @Data
 @RequiredArgsConstructor
+@Slf4j
 public class ProductService {
 
     private final ProductRepository repository;
@@ -25,6 +27,7 @@ public class ProductService {
 
     public ProductDTO findById(Long id) throws NoSuchElementException {
         Product product = repository.findById(id).orElseThrow();
+        log.debug("Product with ID=" + id + " has been founded and returned in response.");
         return ProductMapper.MAPPER.fromProduct(product);
     }
 
@@ -52,7 +55,9 @@ public class ProductService {
             dbProduct.setTitle(productDTO.getTitle());
             dbProduct.setCost(productDTO.getCost());
             repository.save(dbProduct);
+            log.info("Product with ID= " + prodId + " has been updated.");
         } else {
+            log.error("UPDATE PRODUCT REQUEST: product ID = null");
             throw new NullPointerException("This operation is not supported: product ID = null");
         }
     }
@@ -60,10 +65,12 @@ public class ProductService {
     public void delete(Long id) throws NoSuchElementException {
         Product product = repository.findById(id).orElseThrow();
         repository.delete(product);
+        log.info("Product with ID= " + id + " was deleted");
     }
 
     public ProductDTO addNew(ProductDTO incomingProduct) {
         Product product = ProductMapper.MAPPER.toProduct(incomingProduct);
+        log.info("New product has been added to DB.");
         return ProductMapper.MAPPER.fromProduct(repository.save(product));
     }
 

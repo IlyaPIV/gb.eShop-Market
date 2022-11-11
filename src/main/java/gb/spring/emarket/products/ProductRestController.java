@@ -45,7 +45,7 @@ public class ProductRestController {
         service.update(productDTO);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public void deleteProductById(@PathVariable Long id) {
         service.delete(id);
     }

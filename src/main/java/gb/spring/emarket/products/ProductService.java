@@ -2,6 +2,7 @@ package gb.spring.emarket.products;
 
 import gb.spring.emarket.dto.ProductDTO;
 import gb.spring.emarket.entity.Product;
+import gb.spring.emarket.mappers.ProductMapper;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -23,7 +24,8 @@ public class ProductService {
 
 
     public ProductDTO findById(Long id) throws NoSuchElementException {
-        return new ProductDTO(repository.findById(id).orElseThrow());
+        Product product = repository.findById(id).orElseThrow();
+        return ProductMapper.MAPPER.fromProduct(product);
     }
 
     public Page<ProductDTO> getPage(int pageNum, Integer minPrice, Integer maxPrice, String partName) {
@@ -38,26 +40,22 @@ public class ProductService {
 
         Pageable pageable = PageRequest.of(pageNum - 1, PRODUCTS_PER_PAGE);
         Page<Product> products = repository.findAll(productSpecification, pageable);
-        return products.map(ProductDTO::new);
+        return ProductMapper.MAPPER.fromProductPage(products);
     }
 
     @Transactional
-    public ProductDTO update(ProductDTO productDTO) throws NoSuchElementException, NullPointerException {
-        Product product = null;
+    public void update(ProductDTO productDTO) throws NoSuchElementException, NullPointerException {
         Long prodId = productDTO.getId();
         if (prodId != null) {
-            product = repository.findById(prodId)
+            Product dbProduct = repository.findById(prodId)
                     .orElseThrow();
-            product.setTitle(productDTO.getTitle());
-            product.setCost(productDTO.getCost());
-            repository.save(product);
+            dbProduct.setTitle(productDTO.getTitle());
+            dbProduct.setCost(productDTO.getCost());
+            repository.save(dbProduct);
         } else {
             throw new NullPointerException("This operation is not supported: product ID = null");
         }
-
-        return new ProductDTO(product);
     }
-
 
     public void delete(Long id) throws NoSuchElementException {
         Product product = repository.findById(id).orElseThrow();
@@ -65,8 +63,8 @@ public class ProductService {
     }
 
     public ProductDTO addNew(ProductDTO incomingProduct) {
-        return new ProductDTO(repository.save(new Product(incomingProduct)));
+        Product product = ProductMapper.MAPPER.toProduct(incomingProduct);
+        return ProductMapper.MAPPER.fromProduct(repository.save(product));
     }
-
 
 }

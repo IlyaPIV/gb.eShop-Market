@@ -1,4 +1,4 @@
-package gb.spring.emarket.products;
+package gb.spring.emarket.specifications;
 
 import gb.spring.emarket.entity.Product;
 import org.springframework.data.jpa.domain.Specification;
@@ -16,4 +16,5 @@ public class ProductSpecification {
     public static Specification<Product> titleLike(String namePart) {
         return ((root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("title"), String.format("%%%s%%", namePart)));
     }
+
 }

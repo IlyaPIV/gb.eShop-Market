@@ -3,6 +3,8 @@ package gb.spring.emarket.products;
 import gb.spring.emarket.dto.ProductDTO;
 import gb.spring.emarket.errors.ErrorMessage;
 import gb.spring.emarket.errors.ProductNotFoundException;
+import gb.spring.emarket.validators.ProductValidator;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -13,14 +15,11 @@ import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("api/v2/products")
+@RequiredArgsConstructor
 public class ProductRestController {
 
     private final ProductService service;
-
-    @Autowired
-    public ProductRestController(ProductService service) {
-        this.service = service;
-    }
+    private final ProductValidator validator;
 
     @GetMapping()
     public Page<ProductDTO> getAllProducts(@RequestParam(name = "page", defaultValue = "1") int pageNum,
@@ -37,11 +36,13 @@ public class ProductRestController {
 
     @PostMapping()
     public ProductDTO addNewProduct(@RequestBody ProductDTO product) {
+        validator.validate(product);
         return service.addNew(product);
     }
 
     @PutMapping()
     public void updateProduct(@RequestBody ProductDTO productDTO) {
+        validator.validate(productDTO);
         service.update(productDTO);
     }
 
@@ -67,12 +68,5 @@ public class ProductRestController {
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler
-    public ResponseEntity<ErrorMessage> handleNullPointerException(NullPointerException ex) {
-        ErrorMessage errorResponse = new ErrorMessage(ex.getMessage(),
-                HttpStatus.BAD_REQUEST.value());
-
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-    }
 
 }

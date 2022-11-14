@@ -6,7 +6,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
-import java.util.List;
 
 public interface ProductRepository extends PagingAndSortingRepository<Product, Long> {
 

@@ -3,6 +3,7 @@ package gb.spring.emarket.products;
 import gb.spring.emarket.dto.ProductDTO;
 import gb.spring.emarket.entity.Product;
 import gb.spring.emarket.mappers.ProductMapper;
+import gb.spring.emarket.specifications.ProductSpecification;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

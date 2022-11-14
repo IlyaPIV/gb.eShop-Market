@@ -13,7 +13,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler
     public ResponseEntity<ErrorMessage> catchValidationException(ValidationException ex) {
         String errorLog = String.join(", ", ex.getErrorMessages());
-        log.error("Validation error exception: " + errorLog);
+        log.error("Validation exception: " + errorLog);
         return new ResponseEntity<>(new ErrorMessage(errorLog, HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST);
     }
 
@@ -23,5 +23,13 @@ public class GlobalExceptionHandler {
         ErrorMessage errorResponse = new ErrorMessage(ex.getMessage(),
                 HttpStatus.BAD_REQUEST.value());
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorMessage> handleNotFoundException(ProductNotFoundException ex) {
+        ErrorMessage errorResponse = new ErrorMessage(ex.getMessage(),
+                HttpStatus.NOT_FOUND.value());
+        log.error("ProductNotFound exception: " + ex.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 }

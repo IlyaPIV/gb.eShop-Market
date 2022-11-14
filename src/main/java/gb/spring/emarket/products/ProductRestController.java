@@ -2,10 +2,8 @@ package gb.spring.emarket.products;
 
 import gb.spring.emarket.dto.ProductDTO;
 import gb.spring.emarket.errors.ErrorMessage;
-import gb.spring.emarket.errors.ProductNotFoundException;
 import gb.spring.emarket.validators.ProductValidator;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,9 +33,9 @@ public class ProductRestController {
     }
 
     @PostMapping()
-    public ProductDTO addNewProduct(@RequestBody ProductDTO product) {
-        validator.validate(product);
-        return service.addNew(product);
+    public ProductDTO addNewProduct(@RequestBody ProductDTO productDTO) {
+        validator.validate(productDTO);
+        return service.addNew(productDTO);
     }
 
     @PutMapping()
@@ -51,14 +49,6 @@ public class ProductRestController {
         service.delete(id);
     }
 
-
-    @ExceptionHandler
-    public ResponseEntity<ErrorMessage> handleNotFoundException(ProductNotFoundException ex) {
-        ErrorMessage errorResponse = new ErrorMessage("Couldn't find in DataBase any Product with this id",
-                HttpStatus.NOT_FOUND.value());
-
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
-    }
 
     @ExceptionHandler
     public ResponseEntity<ErrorMessage> handleNotFoundException(NoSuchElementException ex) {

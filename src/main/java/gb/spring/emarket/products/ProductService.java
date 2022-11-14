@@ -2,6 +2,7 @@ package gb.spring.emarket.products;
 
 import gb.spring.emarket.dto.ProductDTO;
 import gb.spring.emarket.entity.Product;
+import gb.spring.emarket.errors.ProductNotFoundException;
 import gb.spring.emarket.mappers.ProductMapper;
 import gb.spring.emarket.specifications.ProductSpecification;
 import lombok.Data;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 @Data
@@ -27,9 +29,13 @@ public class ProductService {
 
 
     public ProductDTO findById(Long id) throws NoSuchElementException {
-        Product product = repository.findById(id).orElseThrow();
-        log.debug("Product with ID=" + id + " has been founded and returned in response.");
-        return ProductMapper.MAPPER.fromProduct(product);
+        try {
+            Product product = repository.findById(id).get();
+            log.debug("Product with ID=" + id + " has been founded and returned in response.");
+            return ProductMapper.MAPPER.fromProduct(product);
+        } catch (NoSuchElementException ex) {
+            throw new ProductNotFoundException("There is no product with ID=" + id + " in database");
+        }
     }
 
     public Page<ProductDTO> getPage(int pageNum, Integer minPrice, Integer maxPrice, String partName) {
@@ -73,6 +79,10 @@ public class ProductService {
         Product product = ProductMapper.MAPPER.toProduct(incomingProduct);
         log.info("New product has been added to DB.");
         return ProductMapper.MAPPER.fromProduct(repository.save(product));
+    }
+
+    public Optional<Product> getByID(Long id) {
+        return repository.findById(id);
     }
 
 }

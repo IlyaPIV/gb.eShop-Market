@@ -1,4 +1,4 @@
-package gb.spring.emarket.products;
+package gb.spring.emarket.repositories;
 
 import gb.spring.emarket.entity.Product;
 import org.springframework.data.domain.Page;

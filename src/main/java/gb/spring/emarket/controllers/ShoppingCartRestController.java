@@ -1,5 +1,6 @@
-package gb.spring.emarket.cart;
+package gb.spring.emarket.controllers;
 
+import gb.spring.emarket.services.ShoppingCartService;
 import gb.spring.emarket.dto.ProductDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

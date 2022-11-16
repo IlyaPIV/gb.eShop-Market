@@ -1,16 +1,10 @@
-angular.module('prod-list-app', []).controller('productListController', function ($scope, $http, $location) {
+angular.module('front').controller('productListController', function ($scope, $http, $location) {
 
-    const moduleURL = "http://localhost:9090/eshop/products";
+    const moduleURL = "http://localhost:9090/eshop/api/v2/products";
     let currentPageIndex = 1;
 
     $scope.loadProducts = function (pageIndex = 1) {
-        $http({
-            url: moduleURL + "/",
-            method: 'GET',
-            params: {
-                page: pageIndex
-            }
-        }).then(function (response) {
+        $http.get(moduleURL + "?page=" + pageIndex).then(function (response) {
             console.log(response.data);
             $scope.productList = response.data;
             $scope.paginationArray = $scope.generatePagesIndexes(1, response.data);
@@ -28,8 +22,7 @@ angular.module('prod-list-app', []).controller('productListController', function
     }
 
     $scope.btnDeleteProduct = function (productId) {
-        //$http.delete(moduleURL + "/delete/" + productId)
-        $http.get(moduleURL + "/delete/" + productId)
+        $http.delete(moduleURL + "/" + productId)
             .then(function (response) {
                 $scope.loadProducts();
             });
@@ -58,7 +51,7 @@ angular.module('prod-list-app', []).controller('productListController', function
 
         // $http.post(modulePath + "/", JSON.stringify(formData))
         $http({
-            url: moduleURL + "/",
+            url: moduleURL,
             method: 'POST',
             params: {
                 name: 'input test name',

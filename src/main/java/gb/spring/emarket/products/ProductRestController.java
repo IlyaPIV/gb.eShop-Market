@@ -2,27 +2,29 @@ package gb.spring.emarket.products;
 
 import gb.spring.emarket.dto.ProductDTO;
 import gb.spring.emarket.errors.ErrorMessage;
-import gb.spring.emarket.errors.ProductNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
+import gb.spring.emarket.validators.ProductValidator;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.MethodNotAllowedException;
 
-import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/v2/products")
+@RequiredArgsConstructor
 public class ProductRestController {
-    @Autowired
-    private ProductService service;
+
+    private final ProductService service;
+    private final ProductValidator validator;
 
     @GetMapping()
-    public Page<ProductDTO> getAllProducts(@RequestParam(name = "page", defaultValue = "1") int pageNum) {
-        return service.getPage(pageNum);
+    public Page<ProductDTO> getAllProducts(@RequestParam(name = "page", defaultValue = "1") int pageNum,
+                                           @RequestParam(name = "minPrice", required = false) Integer minPrice,
+                                           @RequestParam(name = "maxPrice", required = false) Integer maxPrice,
+                                           @RequestParam(name = "name", required = false) String partName) {
+        return service.getPage(pageNum, minPrice, maxPrice, partName);
     }
 
     @GetMapping("/{id}")
@@ -31,33 +33,22 @@ public class ProductRestController {
     }
 
     @PostMapping()
-    public ProductDTO addNewProduct(@RequestBody ProductDTO product) {
-        return service.addNew(product);
+    public ProductDTO addNewProduct(@RequestBody ProductDTO productDTO) {
+        validator.validate(productDTO);
+        return service.addNew(productDTO);
     }
 
     @PutMapping()
-    public ProductDTO updateProduct(@RequestBody ProductDTO productDTO) {
-        return service.save(productDTO);
+    public void updateProduct(@RequestBody ProductDTO productDTO) {
+        validator.validate(productDTO);
+        service.update(productDTO);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public void deleteProductById(@PathVariable Long id) {
         service.delete(id);
     }
 
-    @GetMapping("/filter")
-    public List<ProductDTO> findMinMax(@RequestParam(name = "min", defaultValue = "0") Float min,
-                                       @RequestParam(name = "max", defaultValue = "0") Float max) {
-        return service.findAllWithFilter(min, max).stream().map(ProductDTO::new).collect(Collectors.toList());
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<ErrorMessage> handleNotFoundException(ProductNotFoundException ex) {
-        ErrorMessage errorResponse = new ErrorMessage("Couldn't find in DataBase any Product with this id",
-                HttpStatus.NOT_FOUND.value());
-
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
-    }
 
     @ExceptionHandler
     public ResponseEntity<ErrorMessage> handleNotFoundException(NoSuchElementException ex) {
@@ -67,12 +58,5 @@ public class ProductRestController {
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler
-    public ResponseEntity<ErrorMessage> handleNullPointerException(NullPointerException ex) {
-        ErrorMessage errorResponse = new ErrorMessage(ex.getMessage(),
-                HttpStatus.BAD_REQUEST.value());
 
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-    }
-    
 }

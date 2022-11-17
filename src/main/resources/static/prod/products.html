@@ -1,4 +1,6 @@
-<h2><b>Actual product list:</b></h2>
+<div class="text-center">
+    <h2><b>Actual product list:</b></h2>
+</div>
 <table class="table table-bordered table-striped">
     <thead class="table-dark">
     <tr>
@@ -27,7 +29,9 @@
         </td>
         <td>
             <!--                        <button class="btn btn-info" ng-click="">Edit</button>-->
-            <button class="btn btn-warning" ng-click="btnDeleteProduct(product.id)">Delete</button>
+            <button class="btn btn-warning" ng-show="hasUserRole(['MANAGER', 'ADMIN', 'SUPERADMIN'])"
+                    ng-click="btnDeleteProduct(product.id)">Delete
+            </button>
         </td>
     </tr>
     </tbody>

@@ -25,12 +25,6 @@
                 <ul class="nav-item">
                     <a class="nav-link" href="#!/products" style="font-weight: bold">Products list</a>
                 </ul>
-                <ul class="nav-item" ng-show="isUserLoggedIn()">
-                    <a class="nav-link" href="#!/add_new_product">Add new product</a>
-                </ul>
-                <ul class="nav-link">
-                    <a class="nav-link" href="#!/all_users">Admins: Show all users</a>
-                </ul>
                 <ul class="nav-item" ng-show="!isUserLoggedIn()">
                     <form class="align-middle" ng-submit="tryToAuth()">
                         <div class="input-group input-group-sm" style="padding: 4px;">
@@ -46,8 +40,16 @@
                         </div>
                     </form>
                 </ul>
-                <ul class="nav-item" ng-show="isUserLoggedIn()" style="padding: 4px;">
-                    <button class="btn btn-outline-secondary btn-sm" ng-click="tryToLogout()">LogOut</button>
+                <ul class="nav-item" ng-show="isUserLoggedIn()" style="margin-left: 10px;">
+                    <div style="display: inline">
+                        <div ng-show="hasUserRole(['ADMIN','SUPERADMIN'])" style="display: inline-block">
+                            <a class="nav-link" style="display: inline-block" href="#!/add_new_product">Add new
+                                product</a>
+                            <a class="nav-link" style="display: inline-block" href="#!/all_users">Show all users</a>
+                        </div>
+                        <button class="btn btn-outline-secondary btn-sm" ng-click="tryToLogout()">LogOut</button>
+                    </div>
+
                 </ul>
                 <ul class="nav-item" style="padding: 4px;">
                     <a class="nav-link" href="http://localhost:9090/eshop/swagger-ui/index.html">SWAGGER</a>
@@ -60,6 +62,7 @@
         <script src="index.js"></script>
         <script src="main_page/mainPage.js"></script>
         <script src="prod/products_list.js"></script>
+        <script src="users/users_list.js"></script>
     </div>
 </div>
 

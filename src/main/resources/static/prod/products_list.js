@@ -1,6 +1,6 @@
 angular.module('front').controller('productListController', function ($scope, $http, $location) {
 
-    const moduleURL = "http://localhost:9090/eshop/api/v2/products";
+    let moduleURL = contextPath + "api/v2/products";
     let currentPageIndex = 1;
 
     $scope.loadProducts = function (pageIndex = 1) {

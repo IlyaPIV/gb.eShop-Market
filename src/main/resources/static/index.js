@@ -1,5 +1,7 @@
 var myApp = angular.module('front', ['ngRoute', 'ngStorage']);
 
+const contextPath = "http://localhost:9090/eshop/";
+
 (function (app) {
     app
         .config(function ($routeProvider) {
@@ -12,6 +14,10 @@ var myApp = angular.module('front', ['ngRoute', 'ngStorage']);
                     templateUrl: 'prod/products.html',
                     controller: 'productListController'
                 })
+                .when('/all_users', {
+                    templateUrl: 'users/users_list.html',
+                    controller: 'usersListController'
+                })
                 .otherwise({
                     redirectTo: '/'
                 });
@@ -20,25 +26,39 @@ var myApp = angular.module('front', ['ngRoute', 'ngStorage']);
             if ($localStorage.eMarketUser) {
                 $http.defaults.headers.common.Authorization = 'Bearer ' + $localStorage.eMarketUser.token;
             }
+
+            $rootScope.isUserLoggedIn = function () {
+                return !!$localStorage.eMarketUser;
+            };
+
+            $rootScope.hasUserRole = function (rolesArray) {
+                if ($localStorage.eMarketUser == null) return false;
+                let authorities = $localStorage.eMarketUser.authorities;
+                for (let i = 0; i < authorities.length; i++) {
+                    if (rolesArray.includes(authorities[i])) return true;
+                }
+                return false;
+            };
         });
 
 })(myApp);
 
 myApp.controller('navController', function ($rootScope, $scope, $http, $localStorage) {
-    const apiURL = 'http://localhost:9090/eshop/';
 
     $scope.tryToAuth = function () {
-        $http.post(apiURL + 'auth', $scope.user)
+        $http.post(contextPath + 'auth', $scope.user)
             .then(function successCallBack(response) {
                 if (response.data.token) {
-                    console.log(response.data);
-
+                    // console.log(response.data);
                     $http.defaults.headers.common.Authorization = 'Bearer ' + response.data.token;
                     $localStorage.eMarketUser = {
                         username: $scope.user.username,
                         token: response.data.token,
                         authorities: response.data.authorities
                     };
+
+                    $scope.user.username = null;
+                    $scope.user.password = null;
 
                 }
             }, function errorCallBack(response) {
@@ -49,12 +69,6 @@ myApp.controller('navController', function ($rootScope, $scope, $http, $localSto
     $scope.tryToLogout = function () {
         $scope.clearUser();
 
-        if ($scope.user.username) {
-            $scope.user.username = null;
-        }
-        if ($scope.user.password) {
-            $scope.user.password = null;
-        }
     };
 
     $scope.clearUser = function () {
@@ -62,9 +76,6 @@ myApp.controller('navController', function ($rootScope, $scope, $http, $localSto
         $http.defaults.headers.common.Authorization = '';
     };
 
-    $rootScope.isUserLoggedIn = function () {
-        return !!$localStorage.eMarketUser;
-    };
 });
 
 

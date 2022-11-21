@@ -1,4 +1,4 @@
-package gb.spring.emarket.cart;
+package gb.spring.emarket.services;
 
 import gb.spring.emarket.dto.ProductDTO;
 import gb.spring.emarket.entity.Product;
@@ -6,7 +6,7 @@ import gb.spring.emarket.errors.ProductNotFoundException;
 import gb.spring.emarket.errors.ShoppingCardException;
 import gb.spring.emarket.errors.ValidationException;
 import gb.spring.emarket.mappers.ProductMapper;
-import gb.spring.emarket.products.ProductService;
+import gb.spring.emarket.services.ProductService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -78,7 +78,7 @@ public class ShoppingCartService {
             Product product = productService.getByID(entity.getKey()).get();
             ProductDTO dto = ProductMapper.MAPPER.fromProduct(product);
             dto.setCount(entity.getValue());
-            
+
             productDTOList.add(dto);
         }
 

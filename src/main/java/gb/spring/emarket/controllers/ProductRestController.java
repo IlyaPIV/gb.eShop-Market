@@ -1,7 +1,8 @@
-package gb.spring.emarket.products;
+package gb.spring.emarket.controllers;
 
 import gb.spring.emarket.dto.ProductDTO;
 import gb.spring.emarket.errors.ErrorMessage;
+import gb.spring.emarket.services.ProductService;
 import gb.spring.emarket.validators.ProductValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

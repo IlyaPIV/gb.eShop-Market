@@ -1,0 +1,54 @@
+<div class="text-center">
+    <h2><b>Users in Database:</b></h2>
+</div>
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+    <tr>
+        <th class="col-sm-1">ID</th>
+        <th class="col-sm-3">User Name</th>
+        <th class="col-sm-3">Email</th>
+        <th class="col-sm-2">Roles</th>
+        <th class="col-sm-2">Created</th>
+        <th class="col-sm-1"></th>
+    </tr>
+    </thead>
+    <tbody class="table-group-divider">
+    <tr ng-repeat="user in usersList.content">
+        <td>
+            {{user.id}}
+        </td>
+        <td>
+            {{user.name}}
+        </td>
+        <td>
+            {{user.email}}
+        </td>
+        <td>
+            {{user.roles}}
+        </td>
+        <td>
+            {{user.created}}
+        </td>
+        <td>
+
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<div>&nbsp;</div>
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center flex-wrap">
+        <li class="page-item">
+            <button class="page-link" ng-click="loadUsers(1)">First</button>
+        </li>
+        <li class="page-item" ng-repeat="pageIndex in paginationArray">
+            <button class="page-link" ng-click="loadUsers(pageIndex)">{{pageIndex}}</button>
+        </li>
+        <li class="page-item">
+            <button class="page-link" ng-click="loadUsers(paginationArray.length)">Last</button>
+        </li>
+    </ul>
+</nav>
+<div>&nbsp;</div>
+

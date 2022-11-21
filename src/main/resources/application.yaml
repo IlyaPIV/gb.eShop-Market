@@ -10,12 +10,15 @@ spring:
     username: java
     password: java
   jpa:
-    #    hibernate:
-    #      ddl-auto: create
+    hibernate:
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
+jwt:
+  secret: qwerty1234658790
+  lifetime: 3600000
 
 logging:
   level:
@@ -30,3 +33,4 @@ logging:
       total-size-cap: 1MB
       max-history: 14
       clean-history-on-start: true
+

@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.util.Date;
 
+
 @Data
 public class ErrorMessage {
     private final String message;
@@ -21,6 +22,5 @@ public class ErrorMessage {
         this.httpErrorStatus = 400;
         this.date = new Date();
     }
-
 
 }

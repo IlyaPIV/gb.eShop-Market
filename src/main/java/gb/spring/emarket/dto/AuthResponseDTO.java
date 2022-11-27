@@ -13,10 +13,6 @@ public class AuthResponseDTO {
     private String token;
     private List<String> authorities;
 
-    public AuthResponseDTO(String token) {
-        this.token = token;
-    }
-
     public AuthResponseDTO(String token,
                            Collection<? extends GrantedAuthority> authorities) {
         this.token = token;

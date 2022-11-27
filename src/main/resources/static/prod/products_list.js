@@ -1,32 +1,23 @@
 angular.module('front').controller('productListController', function ($scope, $http, $location) {
 
-    let moduleURL = contextPath + "api/v2/products";
+    let apiURL = contextPath + "api/v2";
+    let productsURL = "/products";
+    let shoppingCartURL = "/cart";
     let currentPageIndex = 1;
 
+    $scope.totalSum = 0;
+
     $scope.loadProducts = function (pageIndex = 1) {
-        $http.get(moduleURL + "?page=" + pageIndex).then(function (response) {
+        $http.get(apiURL + productsURL + "?page=" + pageIndex).then(function (response) {
             console.log(response.data);
             $scope.productList = response.data;
             $scope.paginationArray = $scope.generatePagesIndexes(1, response.data);
         });
     };
 
-    $scope.generatePagesIndexes = function (startPage, pageData) {
-        let arr = [];
-        endPage = pageData.totalPages;
-        for (let i = startPage; i < endPage + 1; i++) {
-            arr.push(i);
-        }
-
-        return arr;
-    }
-
-    $scope.btnDeleteProduct = function (productId) {
-        $http.delete(moduleURL + "/" + productId)
-            .then(function (response) {
-                $scope.loadProducts();
-            });
-    };
+    /*
+    * SHOPPING
+     */
 
     $scope.btnMinusClick = function (product) {
         if (product.count > 0) {
@@ -38,29 +29,56 @@ angular.module('front').controller('productListController', function ($scope, $h
         product.count += 1;
     };
 
-
-    $scope.btnRefreshList = function () {
-        $scope.loadProducts();
-    };
-
-    $scope.btnAddNew = function () {
-
-        const formData = new FormData();
-        formData.append('name', 'input test name');
-        formData.append('cost', 666);
-
-        // $http.post(modulePath + "/", JSON.stringify(formData))
-        $http({
-            url: moduleURL,
-            method: 'POST',
-            params: {
-                name: 'input test name',
-                cost: 666
-            }
-        }).then(function (response) {
-            $scope.loadProducts();
+    $scope.getTotalCostInCart = function () {
+        $http.get(apiURL + shoppingCartURL + "/totalCost").then(function (response) {
+            console.log(response);
+            $scope.totalSum = response.data;
         });
     };
 
+    $scope.btnBuyProduct = function (product) {
+        console.log(product);
+        $http({
+            url: apiURL + shoppingCartURL,
+            method: 'POST',
+            params: {
+                id: product.id,
+                title: product.title,
+                count: product.count,
+                cost: product.cost
+            }
+        }).then(function () {
+            product.count = 0;
+            $scope.getTotalCostInCart();
+        }, function (error) {
+            console.log(error);
+        });
+
+    }
+    /*
+    * PRODUCTS MANAGEMENT
+     */
+
+    $scope.btnAddNew = function () {
+        $location.path('/new_product');
+    };
+
+    $scope.btnEditProduct = function (productId) {
+        console.log('edit product ID=' + productId);
+    }
+
+    $scope.btnDeleteProduct = function (productId) {
+        $http.delete(apiURL + productsURL + "/" + productId)
+            .then(function (response) {
+                $scope.loadProducts();
+            });
+    };
+
+    /*
+    * INIT METHODS
+     */
+
     $scope.loadProducts();
+    $scope.getTotalCostInCart();
+
 });

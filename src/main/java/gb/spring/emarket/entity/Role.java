@@ -13,4 +13,5 @@ public class Role {
     private Integer id;
     @Column(name = "name")
     private String name;
+    
 }

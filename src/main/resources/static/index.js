@@ -30,6 +30,10 @@ const contextPath = "http://localhost:9090/eshop/";
                     templateUrl: 'prod/create_edit/product.html',
                     controller: 'editProductForm'
                 })
+                .when('/checkout', {
+                    templateUrl: 'checkout/checkout.html',
+                    controller: 'checkoutController'
+                })
                 .otherwise({
                     redirectTo: '/'
                 });

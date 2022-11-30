@@ -1,21 +1,20 @@
 package gb.spring.emarket.services;
 
+import gb.spring.emarket.dto.CartItemDTO;
 import gb.spring.emarket.dto.ProductDTO;
 import gb.spring.emarket.dto.ShoppingCartDTO;
-import gb.spring.emarket.entity.Product;
+import gb.spring.emarket.entity.CartItem;
 import gb.spring.emarket.errors.ProductNotFoundException;
 import gb.spring.emarket.errors.ShoppingCardException;
 import gb.spring.emarket.errors.ValidationException;
-import gb.spring.emarket.mappers.ProductMapper;
-import gb.spring.emarket.services.ProductService;
+import gb.spring.emarket.mappers.CartItemMapper;
+import gb.spring.emarket.repositories.BasicShoppingCartRepository;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
 
 
 @Data
@@ -23,101 +22,87 @@ import java.util.NoSuchElementException;
 @RequiredArgsConstructor
 public class ShoppingCartService {
 
-    private final Map<Long, Integer> shoppingCart;
-    private final ProductService productService;
+    public static final float SHIPPING_COST_PER_ITEM = 0.5f;
 
-    private float totalCost = 0;
-    private int totalCount = 0;
+    private final BasicShoppingCartRepository shoppingCartRepo;
+    private final ProductService productService;
 
     public void addProduct(ProductDTO dto) {
 
         Long productId = dto.getId();
         validateProductId(productId);
+        CartItem item = CartItemMapper.fromProductDTO(dto);
 
-        Integer count = dto.getCount();
-        totalCost += dto.getCost() * dto.getCount();
-        totalCount += dto.getCount();
-
-        shoppingCart.merge(productId, count, Integer::sum);
-    }
-
-    public void removeProduct(Long productId) {
-        if (isPresent(productId)) {
-            int count = shoppingCart.get(productId);
-            totalCount -= count;
-
-            Product product = productService.getByID(productId).get();  //позже переделать
-            totalCost -= product.getCost() * count;
-
-            shoppingCart.remove(productId);
+        if (shoppingCartRepo.isPresentInCart(item)) {
+            shoppingCartRepo.changeCount(item, dto.getCount() + shoppingCartRepo.getItemQuantity(item));
         } else {
-            throw new ShoppingCardException("Product with ID=" + productId + " is not present in Shopping Cart");
+            shoppingCartRepo.addProduct(item, dto.getCount());
         }
     }
 
-    public void changeCount(ProductDTO dto) {
-        Long productId = dto.getId();
-        int newCount = dto.getCount();
+    public void removeProduct(CartItemDTO dto) {
+        CartItem item = CartItemMapper.fromCartItemDTO(dto);
+        if (shoppingCartRepo.isPresentInCart(item)) {
+            shoppingCartRepo.deleteProduct(item);
+        } else {
+            throw new ShoppingCardException("Product with ID=" + dto.getProductId() + " is not present in Shopping Cart");
+        }
+    }
+
+    public void changeCount(CartItemDTO dto) {
+
+        CartItem item = CartItemMapper.fromCartItemDTO(dto);
+        int newCount = dto.getQuantity();
 
         List<String> errors = new ArrayList<>();
-        if (!isPresent(productId)) {
-            errors.add("Product with ID=" + productId + " is not present in Shopping Cart");
+        if (!shoppingCartRepo.isPresentInCart(item)) {
+            errors.add("Product with ID=" + item.getProductId() + " is not present in Shopping Cart");
         }
         if (newCount < 1) {
             errors.add("New count couldn't be less that 1");
         }
         if (errors.size() > 0) throw new ValidationException(errors);
 
-        totalCount = totalCount - shoppingCart.get(productId) + newCount;
-        totalCost = totalCost - shoppingCart.get(productId) * dto.getCost() + newCount * dto.getCost(); //переделать
+        shoppingCartRepo.changeCount(item, newCount);
 
-        shoppingCart.put(productId, newCount);
-    }
-
-    public boolean isPresent(Long id) {
-        return shoppingCart.get(id) != null;
     }
 
     public void validateProductId(Long id) {
         if (id == null) throw new NullPointerException("Product's ID = NULL.");
-        try {
-            productService.getByID(id).get();
-        } catch (NoSuchElementException ex) {
+
+        productService.getByID(id).orElseThrow(() -> {
             throw new ProductNotFoundException("Wrong product ID. Can't add this position to shopping cart.");
-        }
+        });
+
     }
 
-    private List<ProductDTO> getProductDTOList() {
-        List<ProductDTO> productDTOList = new ArrayList<>();
-
-        for (Map.Entry<Long, Integer> entity :
-                shoppingCart.entrySet()) {
-            Product product = productService.getByID(entity.getKey()).get();
-            ProductDTO dto = ProductMapper.MAPPER.fromProduct(product);
-            dto.setCount(entity.getValue());
-
-            productDTOList.add(dto);
-        }
-        return productDTOList;
+    private List<CartItemDTO> getItemsDTOList() {
+        return shoppingCartRepo.getAllCartItems();
     }
 
-    public List<ProductDTO> getAll() {
+    public List<CartItemDTO> getAll() {
 
-        return getProductDTOList();
+        return getItemsDTOList();
     }
 
     public ShoppingCartDTO getShoppingCart() {
 
-        List<ProductDTO> productDTOList = getProductDTOList();
-        int count = 0;
-        float cost = 0;
-        for (ProductDTO prod :
-                productDTOList) {
-            count += prod.getCount();
-            cost += prod.getCost() * prod.getCount();
-        }
+        List<CartItemDTO> productDTOList = getItemsDTOList();
+        int totalCount = shoppingCartRepo.getTotalCount();
+        float totalCost = shoppingCartRepo.getTotalCost();
 
-        return new ShoppingCartDTO(count, cost, productDTOList);
+        return new ShoppingCartDTO(SHIPPING_COST_PER_ITEM, totalCount, totalCost, productDTOList);
     }
 
+    public Float getTotalCost() {
+        return shoppingCartRepo.getTotalCost();
+    }
+
+    public Integer getTotalCount() {
+        return shoppingCartRepo.getTotalCount();
+    }
+
+    public void removeAll() {
+        shoppingCartRepo.deleteAll();
+    }
 }

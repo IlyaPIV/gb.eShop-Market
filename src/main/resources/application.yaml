@@ -20,6 +20,7 @@ jwt:
   secret: qwerty1234658790
   lifetime: 3600000
 
+
 logging:
   level:
     root: error

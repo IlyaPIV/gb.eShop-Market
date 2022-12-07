@@ -16,6 +16,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -86,4 +87,7 @@ public class ProductService {
         return repository.findById(id);
     }
 
+    public List<Product> getAll() {
+        return (List<Product>) repository.findAll();
+    }
 }

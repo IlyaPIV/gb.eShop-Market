@@ -1,7 +1,7 @@
 server:
   port: 9090
   servlet:
-    context-path: /eshop
+    context-path: /core
 
 spring:
   datasource:
@@ -36,3 +36,5 @@ logging:
       max-history: 14
       clean-history-on-start: true
 
+urls:
+  carts: 'http://localhost:9091/shopping-carts/api/v1/carts'

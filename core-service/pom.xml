@@ -131,6 +131,12 @@
         </dependency>
 
 
+        <dependency>
+            <groupId>gb.spring.e-Market</groupId>
+            <artifactId>market-api</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
     </dependencies>
 
     <build>

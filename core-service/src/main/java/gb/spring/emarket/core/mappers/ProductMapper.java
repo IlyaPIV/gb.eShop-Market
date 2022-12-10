@@ -1,6 +1,6 @@
 package gb.spring.emarket.core.mappers;
 
-import gb.spring.emarket.core.dto.ProductDTO;
+import gb.spring.emarket.api.dto.ProductDTO;
 import gb.spring.emarket.core.entity.Product;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
@@ -17,12 +17,6 @@ public interface ProductMapper {
 
     @InheritInverseConfiguration
     ProductDTO fromProduct(Product product);
-
-//    List<Product> toProductList(List<ProductDTO> productDTOList);
-//
-//    List<ProductDTO> fromProductList(List<Product> productList);
-//
-//    Page<Product> toProductPage(Page<ProductDTO> productDTOPage);
 
     default Page<ProductDTO> fromProductPage(Page<Product> productPage) {
         return productPage.map(new Function<Product, ProductDTO>() {

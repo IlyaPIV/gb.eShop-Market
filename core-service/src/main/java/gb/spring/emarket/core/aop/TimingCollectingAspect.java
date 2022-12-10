@@ -24,15 +24,6 @@ public class TimingCollectingAspect {
     }
 
 
-    @Pointcut("execution(public * gb.spring.emarket.core.controllers.ShoppingCartRestController.*(..))")
-    private void cartControllerMethod() {
-    }
-
-    @Pointcut("execution(public * gb.spring.emarket.core.controllers.OrderRestController.*(..))")
-    private void orderControllerMethod() {
-    }
-
-
     @Around("productControllerMethod()")
     public Object addProductTiming(ProceedingJoinPoint pjp) throws Throwable {
         long startingTime = System.currentTimeMillis();
@@ -53,24 +44,5 @@ public class TimingCollectingAspect {
         return object;
     }
 
-    @Around("cartControllerMethod()")
-    public Object addCartTiming(ProceedingJoinPoint pjp) throws Throwable {
-        long startingTime = System.currentTimeMillis();
-        Object object = pjp.proceed();
-        long endingTime = System.currentTimeMillis();
-        Statistic.addCartTime(endingTime - startingTime);
-
-        return object;
-    }
-
-    @Around("orderControllerMethod()")
-    public Object addOrderTiming(ProceedingJoinPoint pjp) throws Throwable {
-        long startingTime = System.currentTimeMillis();
-        Object object = pjp.proceed();
-        long endingTime = System.currentTimeMillis();
-        Statistic.addOrderTime(endingTime - startingTime);
-
-        return object;
-    }
 
 }

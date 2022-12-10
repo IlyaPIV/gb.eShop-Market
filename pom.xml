@@ -19,6 +19,9 @@
     <modules>
         <module>core-service</module>
         <module>order-service</module>
+        <module>market-api</module>
+        <module>cart-service</module>
+        <module>front</module>
     </modules>
 
 

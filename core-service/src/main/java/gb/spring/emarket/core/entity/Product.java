@@ -26,4 +26,7 @@ public class Product {
         this.cost = cost;
     }
 
+    public Product(Long productId) {
+        this.id = productId;
+    }
 }

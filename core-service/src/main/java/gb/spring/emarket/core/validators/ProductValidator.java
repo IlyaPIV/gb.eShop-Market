@@ -1,7 +1,7 @@
 package gb.spring.emarket.core.validators;
 
-import gb.spring.emarket.core.dto.ProductDTO;
-import gb.spring.emarket.core.errors.ValidationException;
+import gb.spring.emarket.api.dto.ProductDTO;
+import gb.spring.emarket.api.errors.ValidationException;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;

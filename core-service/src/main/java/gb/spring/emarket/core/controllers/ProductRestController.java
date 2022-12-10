@@ -1,8 +1,9 @@
 package gb.spring.emarket.core.controllers;
 
-import gb.spring.emarket.core.errors.ErrorMessage;
+
+import gb.spring.emarket.api.dto.ProductDTO;
+import gb.spring.emarket.api.errors.ErrorMessage;
 import gb.spring.emarket.core.services.ProductService;
-import gb.spring.emarket.core.dto.ProductDTO;
 import gb.spring.emarket.core.validators.ProductValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -15,6 +16,7 @@ import java.util.NoSuchElementException;
 @RestController
 @RequestMapping("api/v2/products")
 @RequiredArgsConstructor
+@CrossOrigin("*")
 public class ProductRestController {
 
     private final ProductService service;

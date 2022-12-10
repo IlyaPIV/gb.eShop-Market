@@ -1,8 +1,8 @@
 package gb.spring.emarket.core.services;
 
+import gb.spring.emarket.api.dto.ProductDTO;
 import gb.spring.emarket.core.entity.Product;
-import gb.spring.emarket.core.errors.ProductNotFoundException;
-import gb.spring.emarket.core.dto.ProductDTO;
+import gb.spring.emarket.api.errors.ProductNotFoundException;
 import gb.spring.emarket.core.mappers.ProductMapper;
 import gb.spring.emarket.core.repositories.ProductRepository;
 import gb.spring.emarket.core.specifications.ProductSpecification;

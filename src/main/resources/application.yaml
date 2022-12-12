@@ -19,6 +19,8 @@ spring:
 jwt:
   secret: qwerty1234658790
   lifetime: 3600000
+project:
+  basedir: D:\Java\e-Market
 
 logging:
   level:

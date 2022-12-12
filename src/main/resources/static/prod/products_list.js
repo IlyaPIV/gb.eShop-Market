@@ -9,7 +9,7 @@ angular.module('front').controller('productListController', function ($scope, $h
 
     $scope.loadProducts = function (pageIndex = 1) {
         $http.get(apiURL + productsURL + "?page=" + pageIndex).then(function (response) {
-            console.log(response.data);
+            //console.log(response.data);
             $scope.productList = response.data;
             $scope.paginationArray = $scope.generatePagesIndexes(1, response.data);
         });
@@ -31,13 +31,13 @@ angular.module('front').controller('productListController', function ($scope, $h
 
     $scope.getTotalCostInCart = function () {
         $http.get(apiURL + shoppingCartURL + "/totalCost").then(function (response) {
-            console.log(response);
-            $scope.totalSum = response.data;
+            //console.log(response);
+            $scope.totalSum = Math.round(response.data * 100) / 100;
         });
     };
 
     $scope.btnBuyProduct = function (product) {
-        console.log(product);
+        //console.log(product);
         $http({
             url: apiURL + shoppingCartURL,
             method: 'POST',
@@ -53,8 +53,13 @@ angular.module('front').controller('productListController', function ($scope, $h
         }, function (error) {
             console.log(error);
         });
+    };
 
-    }
+    $scope.btnCheckout = function () {
+        $location.path('/checkout');
+    };
+
+
     /*
     * PRODUCTS MANAGEMENT
      */
@@ -65,7 +70,7 @@ angular.module('front').controller('productListController', function ($scope, $h
 
     $scope.btnEditProduct = function (productId) {
         console.log('edit product ID=' + productId);
-    }
+    };
 
     $scope.btnDeleteProduct = function (productId) {
         $http.delete(apiURL + productsURL + "/" + productId)
@@ -73,6 +78,7 @@ angular.module('front').controller('productListController', function ($scope, $h
                 $scope.loadProducts();
             });
     };
+
 
     /*
     * INIT METHODS

@@ -1,5 +1,6 @@
 package gb.spring.emarket.controllers;
 
+import gb.spring.emarket.dto.CartItemDTO;
 import gb.spring.emarket.dto.ShoppingCartDTO;
 import gb.spring.emarket.services.ShoppingCartService;
 import gb.spring.emarket.dto.ProductDTO;
@@ -18,7 +19,7 @@ public class ShoppingCartRestController {
     private final ShoppingCartService service;
 
     @GetMapping("/prods")
-    public List<ProductDTO> getAllInCart() {
+    public List<CartItemDTO> getAllInCart() {
         return service.getAll();
     }
 
@@ -43,14 +44,19 @@ public class ShoppingCartRestController {
     }
 
     @PutMapping()
-    public void changeCount(ProductDTO dto) {
+    public void changeCount(CartItemDTO dto) {
         service.changeCount(dto);
 //        return new ResponseEntity<>("Product's count in cart has been changed", HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
-    public void removeFromCart(@PathVariable Long id) {
-        service.removeProduct(id);
+    @DeleteMapping("/")
+    public void removeFromCart(@RequestParam(name = "item") CartItemDTO item) {
+        service.removeProduct(item);
 //        return new ResponseEntity<>("Product with ID=" + id + " has been removed", HttpStatus.OK);
+    }
+
+    @DeleteMapping("/all")
+    public void removeAll() {
+        service.removeAll();
     }
 }

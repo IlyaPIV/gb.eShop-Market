@@ -11,12 +11,24 @@ const contextPath = "http://localhost:9090/eshop/";
                     controller: 'mainPageController'
                 })
                 .when('/products', {
-                    templateUrl: 'prod/products.html',
+                    templateUrl: 'prod/products_list.html',
                     controller: 'productListController'
                 })
                 .when('/all_users', {
                     templateUrl: 'users/users_list.html',
                     controller: 'usersListController'
+                })
+                .when('/manage_products', {
+                    templateUrl: 'prod/manage/products_manage.html',
+                    controller: 'productListController'
+                })
+                .when('/new_product', {
+                    templateUrl: 'prod/create_edit/product.html',
+                    controller: 'editProductForm'
+                })
+                .when("/edit_product", {
+                    templateUrl: 'prod/create_edit/product.html',
+                    controller: 'editProductForm'
                 })
                 .otherwise({
                     redirectTo: '/'
@@ -43,7 +55,7 @@ const contextPath = "http://localhost:9090/eshop/";
 
 })(myApp);
 
-myApp.controller('navController', function ($rootScope, $scope, $http, $localStorage) {
+myApp.controller('navController', function ($scope, $http, $localStorage) {
 
     $scope.tryToAuth = function () {
         $http.post(contextPath + 'auth', $scope.user)
@@ -62,19 +74,29 @@ myApp.controller('navController', function ($rootScope, $scope, $http, $localSto
 
                 }
             }, function errorCallBack(response) {
+                alert(response.data.message);
                 console.log(response);
             });
     };
 
     $scope.tryToLogout = function () {
         $scope.clearUser();
-
     };
 
     $scope.clearUser = function () {
         delete $localStorage.eMarketUser;
         $http.defaults.headers.common.Authorization = '';
     };
+
+    $scope.generatePagesIndexes = function (startPage, pageData) {
+        let arr = [];
+        endPage = pageData.totalPages;
+        for (let i = startPage; i < endPage + 1; i++) {
+            arr.push(i);
+        }
+
+        return arr;
+    }
 
 });
 

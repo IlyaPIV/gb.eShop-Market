@@ -1,4 +1,4 @@
-angular.module('front').controller('usersListController', function ($scope, $http, $location) {
+angular.module('front').controller('usersListController', function ($scope, $http) {
 
     let moduleURL = contextPath + "api/v2/users";
     let currentPageIndex = 1;
@@ -11,23 +11,6 @@ angular.module('front').controller('usersListController', function ($scope, $htt
         }, function errorGetData(response) {
             console.log(response);
         });
-    };
-
-    $scope.generatePagesIndexes = function (startPage, pageData) {
-        let arr = [];
-        endPage = pageData.totalPages;
-        for (let i = startPage; i < endPage + 1; i++) {
-            arr.push(i);
-        }
-
-        return arr;
-    }
-
-    $scope.btnDeleteProduct = function (productId) {
-        $http.delete(moduleURL + "/" + productId)
-            .then(function (response) {
-                $scope.loadProducts();
-            });
     };
 
 

@@ -1,6 +1,7 @@
 package gb.spring.emarket.services;
 
 import gb.spring.emarket.dto.ProductDTO;
+import gb.spring.emarket.dto.ShoppingCartDTO;
 import gb.spring.emarket.entity.Product;
 import gb.spring.emarket.errors.ProductNotFoundException;
 import gb.spring.emarket.errors.ShoppingCardException;
@@ -25,17 +26,29 @@ public class ShoppingCartService {
     private final Map<Long, Integer> shoppingCart;
     private final ProductService productService;
 
+    private float totalCost = 0;
+    private int totalCount = 0;
+
     public void addProduct(ProductDTO dto) {
 
         Long productId = dto.getId();
         validateProductId(productId);
 
         Integer count = dto.getCount();
+        totalCost += dto.getCost() * dto.getCount();
+        totalCount += dto.getCount();
+
         shoppingCart.merge(productId, count, Integer::sum);
     }
 
     public void removeProduct(Long productId) {
         if (isPresent(productId)) {
+            int count = shoppingCart.get(productId);
+            totalCount -= count;
+
+            Product product = productService.getByID(productId).get();  //позже переделать
+            totalCost -= product.getCost() * count;
+
             shoppingCart.remove(productId);
         } else {
             throw new ShoppingCardException("Product with ID=" + productId + " is not present in Shopping Cart");
@@ -55,6 +68,9 @@ public class ShoppingCartService {
         }
         if (errors.size() > 0) throw new ValidationException(errors);
 
+        totalCount = totalCount - shoppingCart.get(productId) + newCount;
+        totalCost = totalCost - shoppingCart.get(productId) * dto.getCost() + newCount * dto.getCost(); //переделать
+
         shoppingCart.put(productId, newCount);
     }
 
@@ -63,6 +79,7 @@ public class ShoppingCartService {
     }
 
     public void validateProductId(Long id) {
+        if (id == null) throw new NullPointerException("Product's ID = NULL.");
         try {
             productService.getByID(id).get();
         } catch (NoSuchElementException ex) {
@@ -70,7 +87,7 @@ public class ShoppingCartService {
         }
     }
 
-    public List<ProductDTO> getAll() {
+    private List<ProductDTO> getProductDTOList() {
         List<ProductDTO> productDTOList = new ArrayList<>();
 
         for (Map.Entry<Long, Integer> entity :
@@ -81,8 +98,26 @@ public class ShoppingCartService {
 
             productDTOList.add(dto);
         }
-
         return productDTOList;
+    }
+
+    public List<ProductDTO> getAll() {
+
+        return getProductDTOList();
+    }
+
+    public ShoppingCartDTO getShoppingCart() {
+
+        List<ProductDTO> productDTOList = getProductDTOList();
+        int count = 0;
+        float cost = 0;
+        for (ProductDTO prod :
+                productDTOList) {
+            count += prod.getCount();
+            cost += prod.getCost() * prod.getCount();
+        }
+
+        return new ShoppingCartDTO(count, cost, productDTOList);
     }
 
 }

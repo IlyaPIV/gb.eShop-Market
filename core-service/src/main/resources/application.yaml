@@ -1,0 +1,40 @@
+server:
+  port: 9090
+  servlet:
+    context-path: /core
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5433/eshop
+    username: java
+    password: java
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+jwt:
+  secret: qwerty1234658790
+  lifetime: 3600000
+project:
+  basedir: D:\Java\e-Market
+
+logging:
+  level:
+    root: error
+    gb.spring.emarket: warn
+  file:
+    name: eshop-log.log
+  logback:
+    rollingpolicy:
+      file-name-pattern: eshop-log-%d{yyyy-MM-dd}.%i.log
+      max-file-size: 100KB
+      total-size-cap: 1MB
+      max-history: 14
+      clean-history-on-start: true
+
+urls:
+  carts: 'http://localhost:9091/shopping-carts/api/v1/carts'

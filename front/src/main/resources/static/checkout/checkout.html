@@ -1,0 +1,115 @@
+<div>
+    <div class="text-center">
+        <h2>Checkout</h2>
+    </div>
+
+    <div class="row m-1">
+        <div class="col-sm-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Shipping information</h5>
+                </div>
+                <div class="card-body">
+                    <p>
+                        <b>Ship to:</b>&nbsp; HERE WILL BE ADDRESS
+                    </p>
+                    <p>
+                        <b>Days to deliver:</b>&nbsp; X day(s)
+                    </p>
+                    <p>
+                        <b>Expected deliver date:</b>&nbsp; DATE DELIVERY
+                    </p>
+                </div>
+            </div>
+            <div>&nbsp;</div>
+            <div class="card">
+                <div class="card-header">
+                    <h5>Payment method</h5>
+                </div>
+                <div class="card-body">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="flexRadioPayment" id="flexRadioDefault1">
+                        <label class="form-check-label" for="flexRadioDefault1">
+                            Cash on delivery
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="flexRadioPayment" id="flexRadioDefault2"
+                               checked>
+                        <label class="form-check-label" for="flexRadioDefault2">
+                            Credit Card
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="flexRadioPayment" id="flexRadioDefault3"
+                               checked>
+                        <label class="form-check-label" for="flexRadioDefault3">
+                            Paypal
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="flexRadioPayment" id="flexRadioDefault4"
+                               checked>
+                        <label class="form-check-label" for="flexRadioDefault4">
+                            Gift Card
+                        </label>
+                    </div>
+
+                    <button type="button" class="btn btn-warning rounded text-center"
+                            style="width: 100%" ng-click="btnPlaceOrder()">PLACE ORDER
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Order Summary</h5>
+                </div>
+                <div class="card-body">
+                    <div>
+                        <table style="width: 100%">
+                            <tr ng-repeat="prodPos in shoppingCart">
+                                <td class="col-sm-2">
+                                    <b>{{prodPos.quantity}}</b> X &nbsp;
+                                </td>
+                                <td class="col-sm-7">
+                                    <b>{{prodPos.title}}</b>
+                                    <br>
+                                    <small>Shipping: <i>{{prodPos.shippingCost}} $</i></small>
+                                </td>
+                                <td class="col-sm-3">
+                                    {{prodPos.totalCost}} $
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="3">
+                                    <hr/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-sm-9">Product Total:</div>
+                        <div class="col-sm-3">
+                            {{cartProductTotal}} $
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-sm-9">Shipping Total:</div>
+                        <div class="col-sm-3">
+                            {{cartShippingTotal}} $
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-sm-9">Payment Total:</div>
+                        <div class="col-sm-3">
+                            <b>{{cartPaymentTotal}} $</b>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

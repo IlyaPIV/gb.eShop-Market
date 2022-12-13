@@ -3,24 +3,30 @@ package gb.spring.emarket.core.integrations;
 import gb.spring.emarket.api.dto.ShoppingCartDTO;
 import lombok.RequiredArgsConstructor;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class ShoppingCartServiceIntegration {
 
-    private final RestTemplate restTemplate;
-
-    //@Value("${urls.carts}")
-    private final String cartURL = "http://localhost:9091/shopping-carts/api/v1/carts";
+    private final WebClient cartServiceWebClient;
 
     public ShoppingCartDTO getCartDTO() {
-        return restTemplate.getForObject(cartURL, ShoppingCartDTO.class);
+        return cartServiceWebClient.get()
+                .uri("/api/v1/carts")
+                .retrieve()
+                .bodyToMono(ShoppingCartDTO.class)
+                .block();
+
     }
 
     public void clearCart() {
-        restTemplate.delete(cartURL + "/all");
+        log.debug("отправляем запрос на очистку корзины");
+        cartServiceWebClient.delete().uri("/api/v1/carts/all").retrieve().toBodilessEntity().block();
     }
 }

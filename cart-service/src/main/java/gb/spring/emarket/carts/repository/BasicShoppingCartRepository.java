@@ -4,6 +4,7 @@ import gb.spring.emarket.api.dto.CartItemDTO;
 import gb.spring.emarket.carts.entity.CartItem;
 import gb.spring.emarket.carts.mapper.CartItemMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.Map;
 
 @RequiredArgsConstructor
 @Component
+@Slf4j
 public class BasicShoppingCartRepository implements AbstractShoppingCartRepository {
 
     private final Map<CartItem, Integer> shoppingCart = new HashMap<>();

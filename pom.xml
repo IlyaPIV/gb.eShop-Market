@@ -22,6 +22,8 @@
         <module>market-api</module>
         <module>cart-service</module>
         <module>front</module>
+        <module>gateway</module>
+        <module>auth-service</module>
     </modules>
 
 

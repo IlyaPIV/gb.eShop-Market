@@ -15,13 +15,9 @@ public class TimingCollectingAspect {
     private void productControllerMethod() {
     }
 
-    @Pointcut("execution(public * gb.spring.emarket.core.controllers.UserRestController.*(..))")
-    private void userControllerMethod() {
-    }
-
-    @Pointcut("execution(public * gb.spring.emarket.core.controllers.AuthenticationController.*(..))")
-    private void authControllerMethod() {
-    }
+//    @Pointcut("execution(public * gb.spring.emarket.core.controllers.UserRestController.*(..))")
+//    private void userControllerMethod() {
+//    }
 
 
     @Around("productControllerMethod()")
@@ -34,15 +30,15 @@ public class TimingCollectingAspect {
         return object;
     }
 
-    @Around("userControllerMethod() || authControllerMethod()")
-    public Object addUserTiming(ProceedingJoinPoint pjp) throws Throwable {
-        long startingTime = System.currentTimeMillis();
-        Object object = pjp.proceed();
-        long endingTime = System.currentTimeMillis();
-        Statistic.addUsersTime(endingTime - startingTime);
-
-        return object;
-    }
+//    @Around("userControllerMethod()")
+//    public Object addUserTiming(ProceedingJoinPoint pjp) throws Throwable {
+//        long startingTime = System.currentTimeMillis();
+//        Object object = pjp.proceed();
+//        long endingTime = System.currentTimeMillis();
+//        Statistic.addUsersTime(endingTime - startingTime);
+//
+//        return object;
+//    }
 
 
 }

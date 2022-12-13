@@ -1,7 +1,7 @@
 server:
   port: 9090
   servlet:
-    context-path: /core
+    context-path: /market-core-ws
 
 spring:
   datasource:
@@ -16,9 +16,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
-jwt:
-  secret: qwerty1234658790
-  lifetime: 3600000
+
 project:
   basedir: D:\Java\e-Market
 
@@ -36,5 +34,9 @@ logging:
       max-history: 14
       clean-history-on-start: true
 
-urls:
-  carts: 'http://localhost:9091/shopping-carts/api/v1/carts'
+integrations:
+  cart-service:
+    url: http://localhost:9091/market-carts-ws/
+    connect-timeout: 5000
+    read-timeout: 10000
+    write-timeout: 2000

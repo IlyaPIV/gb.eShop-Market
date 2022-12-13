@@ -20,9 +20,9 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+
+    @Column(name = "user_name", nullable = false)
+    private String userName;
 
     @Column(name = "created_at")
     @CreationTimestamp
@@ -32,6 +32,7 @@ public class Order {
 
     private float shippingCost;
 
+    @Column(nullable = false)
     private float totalCost;
     @Column(name = "shipping_address")
     private String shippingAddress;
@@ -47,7 +48,7 @@ public class Order {
     private Set<OrderItemPosition> orderDetails = new HashSet<>();
 
 
-    public Order(User user) {
-        this.user = user;
+    public Order(String userName) {
+        this.userName = userName;
     }
 }

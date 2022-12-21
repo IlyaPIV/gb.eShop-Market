@@ -1,57 +1,41 @@
 package gb.spring.emarket.auth.repository;
 
-
-import gb.spring.emarket.auth.model.Role;
 import gb.spring.emarket.auth.model.User;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.test.annotation.Rollback;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.test.context.ActiveProfiles;
+
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
+import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Rollback(value = false)
+//@ActiveProfiles("test")
 class UserRepositoryTest {
 
     @Autowired
-    private UserRepository repository;
-    @Autowired
-    private TestEntityManager entityManager;
-
+    private UserRepository userRepository;
 
     @Test
-    public void testCreateUserWithoutRoles() {
-        User user = new User();
-        user.setUsername("superadmin");
-        user.setEmail("superadmin@gmail.com");
-        user.setPassword("superadmin");
-
-        repository.save(user);
+    void findByUsername() {
+        String username = "bob";
+        Optional<User> bob = userRepository.findByUsername(username);
+        assert (bob.isPresent());
+        assertThat(bob.get().getUsername()).isEqualTo(username);
     }
 
     @Test
-    public void testAddRolesToUser() {
+    void findAll() {
+        Pageable pageable = PageRequest.of(0, 5);
+        Page<User> users = userRepository.findAll(pageable);
 
-        Role role = entityManager.find(Role.class, 3);
-        User user = entityManager.find(User.class, 3);
-
-        user.addRole(role);
-
-        User savedUser = repository.save(user);
-
-        assertThat(savedUser.getRoles()).hasSizeGreaterThan(0);
-        //assertEquals(savedUser.getRoles().size(), 2);
-    }
-
-    @Test
-    public void testEncodePasswords() {
-        User user = entityManager.find(User.class, 1);
-
+        Assertions.assertEquals(2, users.getTotalElements());
     }
 }

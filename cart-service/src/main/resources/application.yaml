@@ -1,4 +1,10 @@
 server:
   port: 9091
   servlet:
-    context-path: /shopping-carts
+    context-path: /market-carts-ws
+integrations:
+  product-service:
+    url: http://localhost:9090/market-core-ws/
+    connect-timeout: 5000
+    read-timeout: 10000
+    write-timeout: 2000

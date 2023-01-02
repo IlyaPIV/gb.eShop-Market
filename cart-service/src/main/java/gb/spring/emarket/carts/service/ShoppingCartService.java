@@ -75,9 +75,7 @@ public class ShoppingCartService {
     public void validateProductId(Long id) {
         if (id == null) throw new NullPointerException("Product's ID = NULL.");
 
-        productService.getByID(id).orElseThrow(() -> {
-            throw new ProductNotFoundException("Wrong product ID. Can't add this position to shopping cart.");
-        });
+        productService.getByID(id);
 
     }
 

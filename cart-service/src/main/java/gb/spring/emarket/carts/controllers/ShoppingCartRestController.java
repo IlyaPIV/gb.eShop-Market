@@ -5,6 +5,7 @@ import gb.spring.emarket.api.dto.ProductDTO;
 import gb.spring.emarket.api.dto.ShoppingCartDTO;
 import gb.spring.emarket.carts.service.ShoppingCartService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("api/v1/carts")
 @RequiredArgsConstructor
-@CrossOrigin("*")
+@Slf4j
 public class ShoppingCartRestController {
 
     private final ShoppingCartService service;

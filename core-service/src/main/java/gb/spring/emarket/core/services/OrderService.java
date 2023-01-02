@@ -21,22 +21,26 @@ public class OrderService {
     private final ShoppingCartServiceIntegration cartServiceIntegration;
 
     @Transactional
-    public void createOrder(User user, CheckoutDTO checkoutDTO) {
+    public void createOrder(String userName, CheckoutDTO checkoutDTO) {
 
-        Order order = createAndFillNewOrder(user, checkoutDTO);
+        Order order = createAndFillNewOrder(userName, checkoutDTO);
         orderRepository.save(order);
         cartServiceIntegration.clearCart();
 
     }
 
-    private Order createAndFillNewOrder(User user, CheckoutDTO checkoutDTO) {
+    private Order createAndFillNewOrder(String userName, CheckoutDTO checkoutDTO) {
 
         ShoppingCartDTO currentCart = cartServiceIntegration.getCartDTO();
 
-        Order order = new Order(user);
+        Order order = new Order(userName);
 
-        order.setPaymentMethod(PaymentMethod.CASH); //checkoutDTO. paymetn
-        order.setStatus(OrderStatus.NEW);
+        order.setPaymentMethod(PaymentMethod.valueOf(checkoutDTO.getPaymentMethod()));
+        if (checkoutDTO.getPaymentMethod().equals("PAYPAL")) {
+            order.setStatus(OrderStatus.PAID);
+        } else {
+            order.setStatus(OrderStatus.NEW);
+        }
         order.setShippingAddress(checkoutDTO.getAddress());
         order.setDeliveryDays(checkoutDTO.getDeliveryDays());
         order.setTotalProducts(currentCart.getTotalProductsCost());

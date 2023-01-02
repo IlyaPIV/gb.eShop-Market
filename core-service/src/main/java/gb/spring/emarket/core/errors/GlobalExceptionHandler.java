@@ -6,7 +6,6 @@ import gb.spring.emarket.api.errors.ValidationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -38,10 +37,4 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler
-    public ResponseEntity<ErrorMessage> handleUsernameNotFoundException(UsernameNotFoundException ex) {
-        ErrorMessage errorResponse = new ErrorMessage(ex.getMessage(), HttpStatus.UNAUTHORIZED.value());
-        log.error("UsernameNotFound exception: " + ex.getMessage());
-        return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
-    }
 }

@@ -16,7 +16,6 @@ import java.util.NoSuchElementException;
 @RestController
 @RequestMapping("api/v2/products")
 @RequiredArgsConstructor
-@CrossOrigin("*")
 public class ProductRestController {
 
     private final ProductService service;

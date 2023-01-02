@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("api/v2/statistic")
-@CrossOrigin("*")
 public class StatisticRestController {
 
     @GetMapping()

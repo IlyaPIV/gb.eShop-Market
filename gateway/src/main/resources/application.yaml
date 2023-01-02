@@ -1,0 +1,45 @@
+server:
+  port: 5555
+
+spring:
+  application:
+    name: gateway-service
+  cloud:
+    gateway:
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "http://localhost:3000"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+            allowedHeaders: "*"
+      routes:
+        - id: core-service
+          uri: http://localhost:9090
+          predicates:
+            - Path=/core/**     # http://localhost:5555/core/api/v2/products -> http://localhost:9090/market-core-ws/api/v2/products
+          filters:
+            - StripPrefix=1                 # кол-во удаляемых префиксов после адреса
+            - PrefixPath=/market-core-ws   # добавляемый префикс
+            - JwtAuthFilter
+        - id: cart-service
+          uri: http://localhost:9091
+          predicates:
+            - Path=/carts/**     # http://localhost:5555/cart/api/v1/carts ->
+          filters:
+            - StripPrefix=1
+            - PrefixPath=/market-carts-ws
+            - JwtAuthFilter
+        - id: auth-service
+          uri: http://localhost:9088
+          predicates:
+            - Path=/auth/**
+          filters:
+            - StripPrefix=1
+            - PrefixPath=/market-auth-ws
+            - JwtAuthFilter
+jwt:
+  secret: gag132agga65fgag13dga5dfg46afga2fg56ag21a

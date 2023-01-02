@@ -1,10 +1,11 @@
 var myApp = angular.module('front', ['ngRoute', 'ngStorage']);
 
-const contextPath = "http://localhost:9090/eshop/";
+const gatewayPath = "http://localhost:5555/";
 
-const coreApiURI = "http://localhost:9090/core/api/v2/";
-const cartsApiURI = "http://localhost:9091/shopping-carts/api/v1/";
-const ordersApiULI = "http://localhost:9092/eshop-orders/api/v1/";
+const coreApiURI = gatewayPath + "core/api/v2/";
+const cartsApiURI = gatewayPath + "carts/api/v1/";
+const ordersApiULI = gatewayPath + "orders/api/v1/";
+const authApuULI = gatewayPath + "auth/api/v1/";
 
 (function (app) {
     app
@@ -66,7 +67,7 @@ const ordersApiULI = "http://localhost:9092/eshop-orders/api/v1/";
 myApp.controller('navController', function ($scope, $http, $localStorage) {
 
     $scope.tryToAuth = function () {
-        $http.post(coreApiURI + 'auth', $scope.user)
+        $http.post(authApuULI + 'login', $scope.user)
             .then(function successCallBack(response) {
                 if (response.data.token) {
                     // console.log(response.data);

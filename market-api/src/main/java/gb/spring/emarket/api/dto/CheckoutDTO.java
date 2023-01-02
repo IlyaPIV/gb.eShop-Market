@@ -8,6 +8,7 @@ public class CheckoutDTO {
 
     private int deliveryDays;
 
+
     public CheckoutDTO() {
     }
 

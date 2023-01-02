@@ -1,12 +1,12 @@
-angular.module('front').controller('checkoutController', function ($scope, $http, $location) {
+myApp.controller('checkoutController', function ($scope, $http, $location) {
 
     let cartControllerURI = "carts";
     let orderControllerURI = "orders";
 
     $scope.checkout = {
         address: 'Here will be shipping address',
-        paymentMethod: 'CASH',
-        deliveryDays: 5
+        paymentMethod: 'PAYPAL',
+        deliveryDays: 3
     };
 
     $scope.getShoppingCart = function () {
@@ -26,7 +26,7 @@ angular.module('front').controller('checkoutController', function ($scope, $http
         //создание и сохранение заказа
         $http.post(coreApiURI + orderControllerURI, $scope.checkout)
             .then(function (response) {
-                console.log(response);
+                // console.log(response);
                 $location.path('/products');
             }, function (error) {
                 console.log(error);

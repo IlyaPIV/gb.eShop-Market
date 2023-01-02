@@ -1,4 +1,4 @@
-angular.module('front').controller('productListController', function ($scope, $http, $location) {
+myApp.controller('productListController', function ($scope, $http, $location) {
 
     let shoppingCartURL = cartsApiURI + "carts";
     let currentPageIndex = 1;

@@ -1,4 +1,4 @@
-angular.module('front').controller('checkoutController', function ($scope, $http, $location) {
+myApp.controller('checkoutController', function ($scope, $http, $location) {
 
     let cartControllerURI = "carts";
     let orderControllerURI = "orders";

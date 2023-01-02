@@ -1,32 +1,50 @@
 package gb.spring.emarket.core.controllers;
 
-import gb.spring.emarket.core.entity.Order;
-import gb.spring.emarket.core.repositories.OrderRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import gb.spring.emarket.api.dto.CheckoutDTO;
+import gb.spring.emarket.core.services.OrderService;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.annotation.Rollback;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@DataJpaTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Rollback(value = false)
+@SpringBootTest
+@AutoConfigureMockMvc
 class OrderRestControllerTest {
 
     @Autowired
-    private OrderRepository repository;
+    private MockMvc mvc;
+
+    @MockBean
+    private OrderService service;
 
     @Test
-    public void testGetAllOrders() {
-        List<Order> all = repository.findAll();
+    public void hasAuthorityTest() throws Exception {
 
-        all.forEach(System.out::println);
+        CheckoutDTO checkoutDTO = new CheckoutDTO();
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
+        String requestJson = mapper.writer().withDefaultPrettyPrinter().writeValueAsString(checkoutDTO);
 
-        assertThat(all.size()).isGreaterThan(0);
+        Mockito.doNothing().when(service).createOrder("username", checkoutDTO);
+
+        mvc.perform(
+                        post("/api/v2/orders")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("username", "User")
+                                .content(requestJson)
+                )
+                .andDo(print())
+                .andExpect(status().isCreated());
     }
 }

@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Rollback(value = false)
-class RoleRepositoryTest {
+class RoleRepositoryRealDbTest {
 
     @Autowired
     private RoleRepository repository;

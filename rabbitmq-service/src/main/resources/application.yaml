@@ -1,0 +1,4 @@
+server:
+  port: 9080
+  servlet:
+    context-path: /market-rabbitmq

@@ -1,4 +1,4 @@
-package gb.spring.emarket.core.entity;
+package gb.spring.emarket.orders.entities;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,9 +20,7 @@ public class OrderItemPosition {
     @JoinColumn(name = "order_id")
     private Order order;
 
-    @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product product;
+    private Long productId;
 
     private int quantity;
 

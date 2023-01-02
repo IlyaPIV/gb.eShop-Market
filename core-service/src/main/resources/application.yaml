@@ -33,10 +33,3 @@ logging:
       total-size-cap: 1MB
       max-history: 14
       clean-history-on-start: true
-
-integrations:
-  cart-service:
-    url: http://localhost:9091/market-carts-ws/
-    connect-timeout: 5000
-    read-timeout: 10000
-    write-timeout: 2000

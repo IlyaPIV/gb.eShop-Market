@@ -1,4 +1,4 @@
-package gb.spring.emarket.core.properties;
+package gb.spring.emarket.orders.integrations;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

@@ -52,7 +52,11 @@
             <artifactId>postgresql</artifactId>
             <version>42.5.1</version>
         </dependency>
-
+        <!--        реактивный спринг-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>gb.spring.e-Market</groupId>

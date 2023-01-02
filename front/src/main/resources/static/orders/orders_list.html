@@ -1,0 +1,49 @@
+<div class="text-center">
+    <h2><b>Your orders:</b></h2>
+</div>
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+    <tr>
+        <th class="col-sm-1">Id</th>
+        <th class="col-sm-1">Created</th>
+        <th class="col-sm-1">Status</th>
+        <th class="col-sm-3">Shipping Address</th>
+        <th class="col-sm-1">Delivery date</th>
+        <th class="col-sm-1">Products cost</th>
+        <th class="col-sm-1">Shipping cost</th>
+        <th class="col-sm-1">Total cost</th>
+        <th class="col-sm-2">Payment Method</th>
+    </tr>
+    </thead>
+    <tbody class="table-group-divider">
+    <tr ng-repeat="order in ordersList">
+        <td>
+            {{order.id}}
+        </td>
+        <td>
+            {{order.created}}
+        </td>
+        <td>
+            {{order.status}}
+        </td>
+        <td>
+            {{order.shippingAddress}}
+        </td>
+        <td>
+            {{order.deliveryDate}}
+        </td>
+        <td>
+            {{order.totalProducts}}
+        </td>
+        <td>
+            {{order.shippingCost}}
+        </td>
+        <td>
+            {{order.totalCost}}
+        </td>
+        <td>
+            {{order.paymentMethod}}
+        </td>
+    </tr>
+    </tbody>
+</table>

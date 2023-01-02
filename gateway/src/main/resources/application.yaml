@@ -23,7 +23,7 @@ spring:
             - Path=/core/**     # http://localhost:5555/core/api/v2/products -> http://localhost:9090/market-core-ws/api/v2/products
           filters:
             - StripPrefix=1                 # кол-во удаляемых префиксов после адреса
-            - PrefixPath=/market-core-ws   # добавляемый префикс
+            - PrefixPath=/market-core-ws    # добавляемый префикс
             - JwtAuthFilter
         - id: cart-service
           uri: http://localhost:9091
@@ -40,6 +40,14 @@ spring:
           filters:
             - StripPrefix=1
             - PrefixPath=/market-auth-ws
+            - JwtAuthFilter
+        - id: order-service
+          uri: http://localhost:9092
+          predicates:
+            - Path=/orders/**
+          filters:
+            - StripPrefix=1
+            - PrefixPath=/market-orders-ws
             - JwtAuthFilter
 jwt:
   secret: gag132agga65fgag13dga5dfg46afga2fg56ag21a

@@ -8,3 +8,6 @@ integrations:
     connect-timeout: 5000
     read-timeout: 10000
     write-timeout: 2000
+grpc:
+  server:
+    port: 9019

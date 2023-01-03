@@ -26,11 +26,19 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final ShoppingCartServiceIntegration cartServiceIntegration;
 
+    private final CleanCartGrpcClientService grpcService;
+
     @Transactional
     public void createOrder(String userName, CheckoutDTO checkoutDTO) {
 
         Order order = createAndFillNewOrder(userName, checkoutDTO);
         orderRepository.save(order);
+
+        // 1st option to clean shopping cart
+        if (grpcService.sentCleanCartCommand(userName)) {
+            System.out.println("Cleaning command success.");
+        }
+        // 2nd option to clean shopping cart
         cartServiceIntegration.clearCart();
 
     }

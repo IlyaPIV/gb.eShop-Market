@@ -25,6 +25,7 @@
         <module>gateway</module>
         <module>auth-service</module>
         <module>rabbitmq-service</module>
+        <module>grpc-proto</module>
     </modules>
 
 

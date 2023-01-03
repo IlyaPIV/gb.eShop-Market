@@ -24,6 +24,13 @@ integrations:
     read-timeout: 10000
     write-timeout: 2000
 
+grpc:
+  client:
+    grpc-cart-service:
+      address: static://localhost:9019
+      negotiation-type: plaintext
+
+
 #
 #logging:
 #  level:

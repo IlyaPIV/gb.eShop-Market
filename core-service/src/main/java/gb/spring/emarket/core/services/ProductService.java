@@ -1,6 +1,7 @@
 package gb.spring.emarket.core.services;
 
 import gb.spring.emarket.api.dto.ProductDTO;
+import gb.spring.emarket.api.errors.ProductValidationException;
 import gb.spring.emarket.core.entity.Product;
 import gb.spring.emarket.api.errors.ProductNotFoundException;
 import gb.spring.emarket.core.mappers.ProductMapper;
@@ -30,14 +31,12 @@ public class ProductService {
     private final int PRODUCTS_PER_PAGE = 8;
 
 
-    public ProductDTO findById(Long id) throws NoSuchElementException {
-        try {
-            Product product = repository.findById(id).get();
-            log.debug("Product with ID=" + id + " has been founded and returned in response.");
-            return ProductMapper.MAPPER.fromProduct(product);
-        } catch (NoSuchElementException ex) {
+    public ProductDTO findById(Long id) {
+        Product product = repository.findById(id).orElseThrow(() -> {
             throw new ProductNotFoundException("There is no product with ID=" + id + " in database");
-        }
+        });
+        log.debug("Product with ID=" + id + " has been founded and returned in response.");
+        return ProductMapper.MAPPER.fromProduct(product);
     }
 
     public Page<ProductDTO> getPage(int pageNum, Integer minPrice, Integer maxPrice, String partName) {
@@ -56,23 +55,27 @@ public class ProductService {
     }
 
     @Transactional
-    public void update(ProductDTO productDTO) throws NoSuchElementException, NullPointerException {
+    public void update(ProductDTO productDTO) {
         Long prodId = productDTO.getId();
         if (prodId != null) {
             Product dbProduct = repository.findById(prodId)
-                    .orElseThrow();
+                    .orElseThrow(() -> {
+                        throw new ProductNotFoundException("No Product with ID = " + prodId + " in database");
+                    });
             dbProduct.setTitle(productDTO.getTitle());
             dbProduct.setCost(productDTO.getCost());
             repository.save(dbProduct);
             log.info("Product with ID= " + prodId + " has been updated.");
         } else {
             log.error("UPDATE PRODUCT REQUEST: product ID = null");
-            throw new NullPointerException("This operation is not supported: product ID = null");
+            throw new ProductValidationException(List.of("UPDATE PRODUCT REQUEST: product ID = null"));
         }
     }
 
-    public void delete(Long id) throws NoSuchElementException {
-        Product product = repository.findById(id).orElseThrow();
+    public void delete(Long id) {
+        Product product = repository.findById(id).orElseThrow(() -> {
+            throw new ProductNotFoundException("No Product with ID = " + id + " in database");
+        });
         repository.delete(product);
         log.info("Product with ID= " + id + " was deleted");
     }

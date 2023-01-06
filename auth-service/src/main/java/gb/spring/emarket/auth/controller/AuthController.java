@@ -2,7 +2,7 @@ package gb.spring.emarket.auth.controller;
 
 import gb.spring.emarket.auth.dto.AuthRequestDTO;
 import gb.spring.emarket.auth.dto.AuthResponseDTO;
-import gb.spring.emarket.api.errors.ErrorMessage;
+import gb.spring.emarket.auth.errors.AuthWebServiceError;
 import gb.spring.emarket.auth.security.JwtTokenUtil;
 import gb.spring.emarket.auth.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ public class AuthController {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
         } catch (BadCredentialsException ex) {
-            return new ResponseEntity<>(new ErrorMessage("Incorrect username or password"), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(new AuthWebServiceError("Incorrect username or password", AuthWebServiceError.AuthServiceErrors.BAD_CREDENTIALS.toString()), HttpStatus.UNAUTHORIZED);
         }
         UserDetails userDetails = userService.loadUserByUsername(authRequest.getUsername());
         String token = jwtTokenUtil.generateNewToken(userDetails);

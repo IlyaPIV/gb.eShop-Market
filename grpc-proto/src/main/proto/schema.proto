@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+
+package gb.spring.emarket.api.grpc;
+
+message Buyer {
+  string name = 1;
+}
+
+message CleanResult {
+  bool result = 1;
+}
+
+service CleanCartService {
+  rpc cleanByBuyer(Buyer) returns(CleanResult){}
+}

@@ -58,6 +58,27 @@
             <artifactId>market-api</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+        <!--        GRPC-->
+        <dependency>
+            <groupId>gb.spring.e-Market</groupId>
+            <artifactId>grpc-proto</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>io.grpc</groupId>
+                    <artifactId>grpc-stub</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>io.grpc</groupId>
+                    <artifactId>google-protobuf</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>net.devh</groupId>
+            <artifactId>grpc-server-spring-boot-starter</artifactId>
+            <version>2.13.1.RELEASE</version>
+        </dependency>
 
     </dependencies>
 

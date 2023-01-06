@@ -1,21 +1,34 @@
 server:
   port: 9092
   servlet:
-    context-path: /eshop-orders
+    context-path: /market-orders-ws
 
-#spring:
-#  datasource:
-#    driver-class-name: org.postgresql.Driver
-#    url: jdbc:postgresql://localhost:5433/eshop
-#    username: java
-#    password: java
-#  jpa:
-#    hibernate:
-#      ddl-auto: update
-#    properties:
-#      hibernate:
-#        dialect: org.hibernate.dialect.PostgreSQLDialect
-#    show-sql: true
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5433/orders
+    username: java
+    password: java
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+
+integrations:
+  cart-service:
+    url: http://localhost:9091/market-carts-ws/
+    connect-timeout: 5000
+    read-timeout: 10000
+    write-timeout: 2000
+
+grpc:
+  client:
+    grpc-cart-service:
+      address: static://localhost:9019
+      negotiation-type: plaintext
 
 
 #

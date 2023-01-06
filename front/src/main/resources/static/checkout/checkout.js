@@ -12,7 +12,7 @@ myApp.controller('checkoutController', function ($scope, $http, $location) {
     $scope.getShoppingCart = function () {
         $http.get(cartsApiURI + cartControllerURI)
             .then(function (response) {
-                console.log(response.data);
+                // console.log(response.data);
                 $scope.shoppingCart = response.data.products;
                 $scope.cartProductTotal = response.data.totalProductsCost;
                 $scope.cartShippingTotal = response.data.totalItems * response.data.shippingCostPerItem;
@@ -24,7 +24,7 @@ myApp.controller('checkoutController', function ($scope, $http, $location) {
 
     $scope.btnPlaceOrder = function () {
         //создание и сохранение заказа
-        $http.post(coreApiURI + orderControllerURI, $scope.checkout)
+        $http.post(ordersApiURI + orderControllerURI, $scope.checkout)
             .then(function (response) {
                 // console.log(response);
                 $location.path('/products');

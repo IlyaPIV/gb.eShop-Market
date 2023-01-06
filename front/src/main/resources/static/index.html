@@ -44,6 +44,9 @@
                 </ul>
                 <ul class="nav-item" ng-show="isUserLoggedIn()" style="margin-left: 10px;">
                     <div style="display: inline">
+                        <div style="display: inline-block">
+                            <a class="nav-link" style="display: inline-block;" href="#!/orders">Your orders</a>
+                        </div>
                         <div ng-show="hasUserRole(['ADMIN','SUPERADMIN'])" style="display: inline-block">
                             <a class="nav-link" style="display: inline-block" href="#!/manage_products">Manage
                                 products</a>
@@ -67,6 +70,7 @@
         <script src="prod/products_list.js"></script>
         <script src="users/users_list.js"></script>
         <script src="checkout/checkout.js"></script>
+        <script src="orders/orders_list.js"></script>
     </div>
 </div>
 

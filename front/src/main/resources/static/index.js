@@ -4,8 +4,8 @@ const gatewayPath = "http://localhost:5555/";
 
 const coreApiURI = gatewayPath + "core/api/v2/";
 const cartsApiURI = gatewayPath + "carts/api/v1/";
-const ordersApiULI = gatewayPath + "orders/api/v1/";
-const authApuULI = gatewayPath + "auth/api/v1/";
+const ordersApiURI = gatewayPath + "orders/api/v1/";
+const authApiURI = gatewayPath + "auth/api/v1/";
 
 (function (app) {
     app
@@ -31,7 +31,7 @@ const authApuULI = gatewayPath + "auth/api/v1/";
                     templateUrl: 'prod/create_edit/product.html',
                     controller: 'editProductForm'
                 })
-                .when("/edit_product", {
+                .when('/edit_product', {
                     templateUrl: 'prod/create_edit/product.html',
                     controller: 'editProductForm'
                 })
@@ -39,11 +39,29 @@ const authApuULI = gatewayPath + "auth/api/v1/";
                     templateUrl: 'checkout/checkout.html',
                     controller: 'checkoutController'
                 })
+                .when('/orders', {
+                    templateUrl: 'orders/orders_list.html',
+                    controller: 'ordersListController'
+                })
                 .otherwise({
                     redirectTo: '/'
                 });
         })
         .run(function ($rootScope, $http, $localStorage) {
+            if ($localStorage.eMarketUser) {
+                try {
+                    let jwt = $localStorage.eMarketUser.token;
+                    let payload = JSON.parse(atob(jwt.split('.')[1]));
+                    let currentTime = parseInt(new Date().getTime()) / 1000;
+                    if (currentTime > payload.exp) {
+                        console.log("Token is expired!!!");
+                        delete $localStorage.eMarketUser;
+                        $http.defaults.headers.common.Authorization = '';
+                    }
+                } catch (e) {
+                }
+            }
+
             if ($localStorage.eMarketUser) {
                 $http.defaults.headers.common.Authorization = 'Bearer ' + $localStorage.eMarketUser.token;
             }
@@ -67,7 +85,7 @@ const authApuULI = gatewayPath + "auth/api/v1/";
 myApp.controller('navController', function ($scope, $http, $localStorage) {
 
     $scope.tryToAuth = function () {
-        $http.post(authApuULI + 'login', $scope.user)
+        $http.post(authApiURI + 'login', $scope.user)
             .then(function successCallBack(response) {
                 if (response.data.token) {
                     // console.log(response.data);
@@ -77,6 +95,7 @@ myApp.controller('navController', function ($scope, $http, $localStorage) {
                         token: response.data.token,
                         authorities: response.data.authorities
                     };
+                    console.log($localStorage.eMarketUser);
 
                     $scope.user.username = null;
                     $scope.user.password = null;

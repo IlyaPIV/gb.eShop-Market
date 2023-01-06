@@ -1,4 +1,4 @@
-package gb.spring.emarket.core.entity;
+package gb.spring.emarket.orders.entities;
 
 public enum OrderStatus {
     NEW,

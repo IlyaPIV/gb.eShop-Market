@@ -1,0 +1,16 @@
+<div xmlns="http://www.w3.org/1999/html">
+    <p></p>
+    <h3>Your order</h3>
+
+    <span>ID: {{order.id}}</span><br>
+    <span>Created: {{order.created}}</span><br>
+    <span>Address: {{order.shippingAddress}}</span><br>
+    <span>Products cost: {{order.totalProducts}}</span><br>
+    <span>Shipping cost: {{order.shippingCost}}</span><br>
+    <span>Total cost: {{order.totalCost}}</span><br>
+    <div>&nbsp;</div>
+
+    <p></p>
+    <h3>Pay with:</h3>
+    <div id="paypal-buttons"></div>
+</div>

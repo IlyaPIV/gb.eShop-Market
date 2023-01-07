@@ -43,6 +43,10 @@ const authApiURI = gatewayPath + "auth/api/v1/";
                     templateUrl: 'orders/orders_list.html',
                     controller: 'ordersListController'
                 })
+                .when('/order_pay/:orderId', {
+                    templateUrl: 'order_payment/order_pay.html',
+                    controller: 'orderPaymentController'
+                })
                 .otherwise({
                     redirectTo: '/'
                 });

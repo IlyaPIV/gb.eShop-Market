@@ -13,6 +13,7 @@
         <th class="col-sm-1">Shipping cost</th>
         <th class="col-sm-1">Total cost</th>
         <th class="col-sm-2">Payment Method</th>
+        <th></th>
     </tr>
     </thead>
     <tbody class="table-group-divider">
@@ -43,6 +44,9 @@
         </td>
         <td>
             {{order.paymentMethod}}
+        </td>
+        <td>
+            <button class="btn btn-primary" ng-show="isOrderNotPayed(order)" ng-click="goToPay(order.id)">Pay</button>
         </td>
     </tr>
     </tbody>

@@ -1,4 +1,4 @@
-myApp.controller('ordersListController', function ($scope, $http) {
+myApp.controller('ordersListController', function ($scope, $http, $location) {
 
     let moduleURL = ordersApiURI + "/orders";
 
@@ -11,6 +11,14 @@ myApp.controller('ordersListController', function ($scope, $http) {
                     console.log(reason);
                 }
             );
+    };
+
+    $scope.goToPay = function (orderId) {
+        $location.path('/order_pay/' + orderId);
+    };
+
+    $scope.isOrderNotPayed = function (order) {
+        return order.status === "NEW" && order.paymentMethod === "NOT_CHOISED";
     };
 
     $scope.loadOrders();

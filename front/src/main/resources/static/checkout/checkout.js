@@ -5,8 +5,13 @@ myApp.controller('checkoutController', function ($scope, $http, $location) {
 
     $scope.checkout = {
         address: 'Here will be shipping address',
-        paymentMethod: 'PAYPAL',
+        paymentMethod: 'NOT_CHOISED',
         deliveryDays: 3
+    };
+
+    $scope.changePaymentMethod = function (method) {
+        $scope.checkout.paymentMethod = method;
+        //console.log(method);
     };
 
     $scope.getShoppingCart = function () {
@@ -23,6 +28,7 @@ myApp.controller('checkoutController', function ($scope, $http, $location) {
     };
 
     $scope.btnPlaceOrder = function () {
+
         //создание и сохранение заказа
         $http.post(ordersApiURI + orderControllerURI, $scope.checkout)
             .then(function (response) {
@@ -31,8 +37,8 @@ myApp.controller('checkoutController', function ($scope, $http, $location) {
             }, function (error) {
                 console.log(error);
             })
-
     }
+
 
     $scope.getShoppingCart();
 

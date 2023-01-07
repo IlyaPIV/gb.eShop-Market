@@ -18,13 +18,18 @@ public class OrderRestController {
     @PostMapping
     public ResponseEntity<?> placeOrder(@RequestHeader String username, @RequestBody CheckoutDTO checkoutDTO) {
         System.out.println();
-        orderService.createOrder(username, checkoutDTO);
-        return new ResponseEntity<>(new StringResponseDTO("New order has been placed"), HttpStatus.CREATED);
+        Integer orderId = orderService.createOrder(username, checkoutDTO);
+        return new ResponseEntity<>(new StringResponseDTO(orderId.toString()), HttpStatus.CREATED);
     }
 
     @GetMapping()
     public ResponseEntity<?> getOrders(@RequestHeader String username) {
 
         return new ResponseEntity<>(orderService.getUsersOrders(username), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getOrderById(@PathVariable Integer id) {
+        return new ResponseEntity<>(orderService.getOrderById(id), HttpStatus.OK);
     }
 }

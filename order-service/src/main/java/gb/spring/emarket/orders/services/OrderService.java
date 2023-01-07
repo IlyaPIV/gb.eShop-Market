@@ -112,7 +112,11 @@ public class OrderService {
         dto.paymentMethod = order.getPaymentMethod().toString();
         return dto;
     }
-    
+
+    public Optional<Order> findById(Long id) {
+        return orderRepository.findById(Math.toIntExact(id));
+    }
+
     public OrderDTO getOrderById(Integer id) {
         Order order = orderRepository.findById(id).orElseThrow(() -> new OrderNotFoundException("Order with id " + id + " is not found in DB."));
 

@@ -4,10 +4,10 @@ package gb.spring.emarket.api.errors;
 import java.util.List;
 
 
-public class ValidationException extends RuntimeException {
+public class ProductValidationException extends RuntimeException {
     private List<String> errorMessages;
 
-    public ValidationException(List<String> errorFieldsMessages) {
+    public ProductValidationException(List<String> errorFieldsMessages) {
         super(String.join(", ", errorFieldsMessages));
         this.errorMessages = errorFieldsMessages;
     }

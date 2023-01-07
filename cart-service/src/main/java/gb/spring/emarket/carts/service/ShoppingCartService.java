@@ -4,13 +4,13 @@ import gb.spring.emarket.api.dto.CartItemDTO;
 import gb.spring.emarket.api.dto.ProductDTO;
 import gb.spring.emarket.api.dto.ShoppingCartDTO;
 import gb.spring.emarket.api.errors.ProductNotFoundException;
-import gb.spring.emarket.api.errors.ValidationException;
+import gb.spring.emarket.api.errors.ProductValidationException;
 import gb.spring.emarket.carts.entity.CartItem;
 import gb.spring.emarket.carts.integrations.ProductServiceIntegration;
 import gb.spring.emarket.carts.mapper.CartItemMapper;
 import gb.spring.emarket.carts.rabbitmq.RabbitmqMessageSender;
 import gb.spring.emarket.carts.repository.BasicShoppingCartRepository;
-import gb.spring.emarket.api.errors.ShoppingCardException;
+import gb.spring.emarket.api.errors.ShoppingCartWebServiceError;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +36,7 @@ public class ShoppingCartService {
     public void addProduct(ProductDTO dto) {
 
         if (dto.getCount() == 0)
-            throw new ValidationException(Collections.singletonList("Items count should be greater than 0!"));
+            throw new ProductValidationException(Collections.singletonList("Items count should be greater than 0!"));
 
         Long productId = dto.getId();
         validateProductId(productId);
@@ -56,7 +56,7 @@ public class ShoppingCartService {
         if (shoppingCartRepo.isPresentInCart(item)) {
             shoppingCartRepo.deleteProduct(item);
         } else {
-            throw new ShoppingCardException("Product with ID=" + dto.getProductId() + " is not present in Shopping Cart");
+            throw new ProductNotFoundException("Product with ID=" + dto.getProductId() + " is not present in Shopping Cart");
         }
     }
 
@@ -72,14 +72,14 @@ public class ShoppingCartService {
         if (newCount < 1) {
             errors.add("New count couldn't be less that 1");
         }
-        if (errors.size() > 0) throw new ValidationException(errors);
+        if (errors.size() > 0) throw new ProductValidationException(errors);
 
         shoppingCartRepo.changeCount(item, newCount);
         rabbitmqMessageSender.sendToLogger("Product " + dto.getTitle() + " was updated in shopping cart. Total count = " + newCount);
     }
 
     public void validateProductId(Long id) {
-        if (id == null) throw new NullPointerException("Product's ID = NULL.");
+        if (id == null) throw new ProductValidationException(List.of("Product's ID = NULL."));
 
         productService.getByID(id);
 

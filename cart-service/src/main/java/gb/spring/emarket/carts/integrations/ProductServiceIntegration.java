@@ -2,6 +2,7 @@ package gb.spring.emarket.carts.integrations;
 
 import gb.spring.emarket.api.dto.ProductDTO;
 import gb.spring.emarket.api.errors.ProductNotFoundException;
+import gb.spring.emarket.carts.errors.ProductServiceIntegrationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -25,6 +26,7 @@ public class ProductServiceIntegration {
                 .onStatus(httpStatus -> httpStatus.value() == HttpStatus.NOT_FOUND.value(),
                         clientResponse -> Mono.error(new ProductNotFoundException("Товар не найден в продуктовом микроконтроллере"))
                 )
+                .onStatus(HttpStatus::is5xxServerError, clientResponse -> Mono.error(new ProductServiceIntegrationException("Product service is broken")))
                 .bodyToMono(ProductDTO.class) // преобразование тела в объект
                 .block();
 

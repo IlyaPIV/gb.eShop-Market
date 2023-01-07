@@ -45,7 +45,7 @@ public class OrderService {
 
     private Order createAndFillNewOrder(String userName, CheckoutDTO checkoutDTO) {
 
-        ShoppingCartDTO currentCart = cartServiceIntegration.getCartDTO();
+        ShoppingCartDTO currentCart = cartServiceIntegration.getCartDTO(userName);
 
         Order order = new Order(userName);
 

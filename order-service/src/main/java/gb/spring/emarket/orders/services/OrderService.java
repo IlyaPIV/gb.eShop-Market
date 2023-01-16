@@ -5,6 +5,7 @@ import gb.spring.emarket.orders.entities.Order;
 import gb.spring.emarket.orders.entities.OrderItemPosition;
 import gb.spring.emarket.orders.entities.OrderStatus;
 import gb.spring.emarket.orders.entities.PaymentMethod;
+import gb.spring.emarket.orders.errors.OrderNotFoundException;
 import gb.spring.emarket.orders.integrations.ShoppingCartServiceIntegration;
 import gb.spring.emarket.orders.repositories.OrderRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,10 +14,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.sql.Date;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -29,7 +27,7 @@ public class OrderService {
     private final CleanCartGrpcClientService grpcService;
 
     @Transactional
-    public void createOrder(String userName, CheckoutDTO checkoutDTO) {
+    public Integer createOrder(String userName, CheckoutDTO checkoutDTO) {
 
         Order order = createAndFillNewOrder(userName, checkoutDTO);
         orderRepository.save(order);
@@ -41,6 +39,7 @@ public class OrderService {
         // 2nd option to clean shopping cart
         cartServiceIntegration.clearCart();
 
+        return order.getId();
     }
 
     private Order createAndFillNewOrder(String userName, CheckoutDTO checkoutDTO) {
@@ -50,11 +49,7 @@ public class OrderService {
         Order order = new Order(userName);
 
         order.setPaymentMethod(PaymentMethod.valueOf(checkoutDTO.getPaymentMethod()));
-        if (checkoutDTO.getPaymentMethod().equals("PAYPAL")) {
-            order.setStatus(OrderStatus.PAID);
-        } else {
-            order.setStatus(OrderStatus.NEW);
-        }
+        order.setStatus(OrderStatus.NEW);
         order.setShippingAddress(checkoutDTO.getAddress());
         order.setDeliveryDays(checkoutDTO.getDeliveryDays());
         order.setTotalProducts(currentCart.getTotalProductsCost());
@@ -95,21 +90,43 @@ public class OrderService {
     private OrdersListDTO convertListToDTO(List<Order> allByUserName) {
         List<OrderDTO> orderDTOS = new ArrayList<>();
         allByUserName.forEach(order -> {
-            OrderDTO dto = new OrderDTO();
-            dto.id = order.getId();
-            dto.created = new Date(Date.from(order.getCreatedAt()
-                    .atZone(ZoneId.systemDefault())
-                    .toInstant()).getTime());
-            dto.deliveryDate = new Date(dto.created.getTime() + TimeUnit.DAYS.toMillis(order.getDeliveryDays()));
-            dto.status = order.getStatus().toString();
-            dto.shippingAddress = order.getShippingAddress();
-            dto.totalProducts = order.getTotalProducts();
-            dto.shippingCost = order.getShippingCost();
-            dto.totalCost = order.getTotalCost();
-            dto.paymentMethod = order.getPaymentMethod().toString();
+            OrderDTO dto = fillDtoFromData(order);
 
             orderDTOS.add(dto);
         });
         return new OrdersListDTO(orderDTOS);
+    }
+
+    private static OrderDTO fillDtoFromData(Order order) {
+        OrderDTO dto = new OrderDTO();
+        dto.id = order.getId();
+        dto.created = new Date(Date.from(order.getCreatedAt()
+                .atZone(ZoneId.systemDefault())
+                .toInstant()).getTime());
+        dto.deliveryDate = new Date(dto.created.getTime() + TimeUnit.DAYS.toMillis(order.getDeliveryDays()));
+        dto.status = order.getStatus().toString();
+        dto.shippingAddress = order.getShippingAddress();
+        dto.totalProducts = order.getTotalProducts();
+        dto.shippingCost = order.getShippingCost();
+        dto.totalCost = order.getTotalCost();
+        dto.paymentMethod = order.getPaymentMethod().toString();
+        return dto;
+    }
+
+    public Optional<Order> findById(Long id) {
+        return orderRepository.findById(Math.toIntExact(id));
+    }
+
+    public OrderDTO getOrderById(Integer id) {
+        Order order = orderRepository.findById(id).orElseThrow(() -> new OrderNotFoundException("Order with id " + id + " is not found in DB."));
+
+        return fillDtoFromData(order);
+    }
+
+    public void orderIsPayedByPayPal(long orderId) {
+        Order order = orderRepository.findById(Math.toIntExact(orderId)).orElseThrow(() -> new OrderNotFoundException("Order with id " + orderId + " is not found in DB."));
+        order.setStatus(OrderStatus.PAID);
+        order.setPaymentMethod(PaymentMethod.PAYPAL);
+        orderRepository.save(order);
     }
 }

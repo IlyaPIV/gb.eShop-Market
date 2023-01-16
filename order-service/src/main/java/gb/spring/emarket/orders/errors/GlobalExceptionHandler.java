@@ -17,4 +17,10 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(new WebServiceErrorMessage(er.getMessage(), "CART_SERVICE_INTEGRATION_ERROR"),
                 HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @ExceptionHandler
+    public ResponseEntity<WebServiceErrorMessage> catchOrderNotFoundException(OrderNotFoundException ex) {
+        log.error("Order not found: " + ex.getMessage());
+        return new ResponseEntity<>(new WebServiceErrorMessage(ex.getMessage(), "ORDER_NOT_FOUND"), HttpStatus.NOT_FOUND);
+    }
 }

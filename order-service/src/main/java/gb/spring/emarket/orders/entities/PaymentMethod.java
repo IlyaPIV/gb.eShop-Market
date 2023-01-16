@@ -4,6 +4,7 @@ public enum PaymentMethod {
     CASH,
     CREDIT_CARD,
     GIFT_CARD,
-    PAYPAL
+    PAYPAL,
+    NOT_CHOISED
 
 }

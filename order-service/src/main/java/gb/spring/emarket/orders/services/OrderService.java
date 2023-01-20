@@ -98,19 +98,17 @@ public class OrderService {
     }
 
     private static OrderDTO fillDtoFromData(Order order) {
-        OrderDTO dto = new OrderDTO();
-        dto.id = order.getId();
-        dto.created = new Date(Date.from(order.getCreatedAt()
-                .atZone(ZoneId.systemDefault())
-                .toInstant()).getTime());
-        dto.deliveryDate = new Date(dto.created.getTime() + TimeUnit.DAYS.toMillis(order.getDeliveryDays()));
-        dto.status = order.getStatus().toString();
-        dto.shippingAddress = order.getShippingAddress();
-        dto.totalProducts = order.getTotalProducts();
-        dto.shippingCost = order.getShippingCost();
-        dto.totalCost = order.getTotalCost();
-        dto.paymentMethod = order.getPaymentMethod().toString();
-        return dto;
+
+        return new OrderDTO.Builder(order.getId(), order.getUserName())
+                .wasCreated(order.getCreatedAt())
+                .currentStatus(order.getStatus().toString())
+                .deliverToDate(order.getDeliveryDays())
+                .toAddress(order.getShippingAddress())
+                .totalProductsCost(order.getTotalProducts())
+                .totalShippingCost(order.getShippingCost())
+                .totalCost(order.getTotalCost())
+                .payWith(order.getPaymentMethod().toString())
+                .build();
     }
 
     public Optional<Order> findById(Long id) {

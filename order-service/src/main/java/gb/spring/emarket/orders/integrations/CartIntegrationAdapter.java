@@ -2,7 +2,7 @@ package gb.spring.emarket.orders.integrations;
 
 import gb.spring.emarket.api.dto.ShoppingCartDTO;
 
-public interface CartIntegrationService {
+public interface CartIntegrationAdapter {
 
     public ShoppingCartDTO getShoppingCart(String userName);
 

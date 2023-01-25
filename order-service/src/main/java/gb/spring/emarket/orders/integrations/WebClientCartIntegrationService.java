@@ -4,7 +4,7 @@ import gb.spring.emarket.api.dto.ShoppingCartDTO;
 import org.springframework.web.reactive.function.client.WebClient;
 
 
-public class WebClientCartIntegrationService extends ShoppingCartServiceIntegration implements CartIntegrationService {
+public class WebClientCartIntegrationService extends ShoppingCartServiceIntegration implements CartIntegrationAdapter {
 
     public WebClientCartIntegrationService(WebClient cartServiceWebClient) {
         super(cartServiceWebClient);

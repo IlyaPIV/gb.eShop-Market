@@ -1,4 +1,4 @@
-package gb.spring.emarket.orders.services;
+package gb.spring.emarket.orders.integrations;
 
 import gb.spring.emarket.api.grpc.Buyer;
 import gb.spring.emarket.api.grpc.CleanCartServiceGrpc;

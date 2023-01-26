@@ -6,25 +6,27 @@ import gb.spring.emarket.orders.entities.OrderItemPosition;
 import gb.spring.emarket.orders.entities.OrderStatus;
 import gb.spring.emarket.orders.entities.PaymentMethod;
 import gb.spring.emarket.orders.errors.OrderNotFoundException;
-import gb.spring.emarket.orders.integrations.ShoppingCartServiceIntegration;
+import gb.spring.emarket.orders.integrations.*;
 import gb.spring.emarket.orders.repositories.OrderRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.sql.Date;
-import java.time.ZoneId;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
 public class OrderService {
 
     private final OrderRepository orderRepository;
-    private final ShoppingCartServiceIntegration cartServiceIntegration;
 
-    private final CleanCartGrpcClientService grpcService;
+    private final WebClientCartIntegrationService integrationService;
+    //private final GrpcCartIntegrationService integrationService;
+
+//    private final ShoppingCartServiceIntegration cartServiceIntegration;
+//
+//    private final CleanCartGrpcClientService grpcService;
 
     @Transactional
     public Integer createOrder(String userName, CheckoutDTO checkoutDTO) {
@@ -32,19 +34,22 @@ public class OrderService {
         Order order = createAndFillNewOrder(userName, checkoutDTO);
         orderRepository.save(order);
 
-        // 1st option to clean shopping cart
-        if (grpcService.sentCleanCartCommand(userName)) {
-            System.out.println("Cleaning command success.");
-        }
-        // 2nd option to clean shopping cart
-        cartServiceIntegration.clearCart();
+//        // 1st option to clean shopping cart
+//        if (grpcService.sentCleanCartCommand(userName)) {
+//            System.out.println("Cleaning command success.");
+//        }
+//        // 2nd option to clean shopping cart
+//        cartServiceIntegration.clearCart();
+
+        integrationService.cleanShoppingCart(userName);
 
         return order.getId();
     }
 
     private Order createAndFillNewOrder(String userName, CheckoutDTO checkoutDTO) {
 
-        ShoppingCartDTO currentCart = cartServiceIntegration.getCartDTO(userName);
+        //ShoppingCartDTO currentCart = cartServiceIntegration.getCartDTO(userName);
+        ShoppingCartDTO currentCart = integrationService.getShoppingCart(userName);
 
         Order order = new Order(userName);
 
